@@ -7,8 +7,7 @@ const exports = await buildIconComponents(ICONS_DIR, OUT_DIR, "@gtk-js/icon-help
 
 await Bun.write(
   new URL("src/index.ts", import.meta.url).pathname,
-  `export { createGtkIcon } from "@gtk-js/icon-helpers";
-export type { GtkIconProps, GtkIcon } from "@gtk-js/icon-helpers";
+  `export type { GtkIconProps, GtkIcon } from "@gtk-js/icon-helpers";
 
 ${exports.sort().join("\n")}
 `,
