@@ -1,0 +1,20 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.3/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [
+    [
+      "@gtk-js/gtk-css",
+      "@gtk-js/icon-helpers",
+      "@gtk-js/gtk4-icons",
+      "@gtk-js/adwaita-icons",
+      "@gtk-js/gtk4",
+      "@gtk-js/adwaita"
+    ]
+  ],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": ["@gtk-js/website"]
+}

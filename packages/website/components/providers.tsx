@@ -1,9 +1,27 @@
 "use client";
 
 import { AdwaitaProvider } from "@gtk-js/adwaita";
-import * as adwaitaIcons from "@gtk-js/adwaita-icons";
+import {
+  AudioVolumeHigh,
+  EditCopy,
+  MediaPlaybackPause,
+  MediaPlaybackStart,
+  MediaSeekBackward,
+  MediaSeekForward,
+  ObjectSelect,
+} from "@gtk-js/adwaita-icons";
 import type { ReactNode } from "react";
 
+const icons = {
+  AudioVolumeHigh,
+  EditCopy,
+  MediaPlaybackPause,
+  MediaPlaybackStart,
+  MediaSeekBackward,
+  MediaSeekForward,
+  ObjectSelect,
+};
+
 export function GtkProviders({ children }: { children: ReactNode }) {
-  return <AdwaitaProvider icons={adwaitaIcons}>{children}</AdwaitaProvider>;
+  return <AdwaitaProvider icons={icons}>{children}</AdwaitaProvider>;
 }

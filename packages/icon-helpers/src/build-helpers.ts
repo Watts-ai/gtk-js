@@ -22,8 +22,8 @@ export function toPascalCase(str: string): string {
 export function toKebabCase(str: string): string {
   return str
     .replace(/-symbolic$/, "")
-    .replace(/[^a-zA-Z0-9-]/g, "-") // replace non-alphanumeric chars with hyphens
-    .replace(/-+/g, "-") // collapse multiple hyphens
+    .replace(/[^a-zA-Z0-9-_]/g, "-") // replace non-alphanumeric chars with hyphens
+    .replace(/[-_]+/g, "-") // collapse multiple hyphens/underscores
     .replace(/^-|-$/g, ""); // trim leading/trailing hyphens
 }
 
