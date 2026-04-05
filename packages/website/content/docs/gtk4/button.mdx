@@ -1,0 +1,50 @@
+---
+title: GtkButton
+description: A widget that emits a signal when clicked.
+---
+
+import { AutoTypeTable } from "fumadocs-typescript/ui";
+
+## Preview
+
+```tsx
+import { GtkButton } from "@gtk-js/adwaita";
+
+<GtkButton label="Default" />
+<GtkButton label="Suggested" className="suggested-action" />
+<GtkButton label="Destructive" className="destructive-action" />
+<GtkButton label="Flat" hasFrame={false} />
+<GtkButton label="Pill" className="pill" />
+<GtkButton label="C" className="circular" />
+```
+
+## CSS Node Tree
+
+```
+button[.flat][.text-button][.image-button][.image-text-button]
+  └── <child> (label, image, or custom content)
+```
+
+## Props
+
+<AutoTypeTable
+  path="packages/gtk4/src/components/button.tsx"
+  name="GtkButtonProps"
+/>
+
+## Style Classes
+
+| Class | Effect |
+|-------|--------|
+| `.suggested-action` | Blue accent background |
+| `.destructive-action` | Red accent background |
+| `.flat` | No background (same as `hasFrame={false}`) |
+| `.pill` | Fully rounded corners |
+| `.circular` | Circular shape |
+| `.osd` | On-screen display style |
+
+## Keyboard
+
+- **Space / Enter** — Activates the button (adds `.keyboard-activating` class while held)
+
+[GTK4 Documentation →](https://docs.gtk.org/gtk4/class.Button.html)

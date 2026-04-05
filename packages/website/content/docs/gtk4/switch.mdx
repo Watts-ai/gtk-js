@@ -1,0 +1,45 @@
+---
+title: GtkSwitch
+description: A toggle switch widget.
+---
+
+import { AutoTypeTable } from "fumadocs-typescript/ui";
+
+## Preview
+
+```tsx
+import { GtkSwitch } from "@gtk-js/adwaita";
+
+<GtkSwitch active={false} />
+<GtkSwitch active={true} />
+```
+
+## CSS Node Tree
+
+```
+switch[:checked]
+  ├── image (on icon)
+  ├── image (off icon)
+  └── slider
+```
+
+## Props
+
+<AutoTypeTable
+  path="packages/gtk4/src/components/switch.tsx"
+  name="GtkSwitchProps"
+/>
+
+## Behavior
+
+- Click or tap to toggle
+- Drag the slider horizontally to toggle
+- The `active` prop controls the user-facing state
+- The `state` prop can differ from `active` during async operations (e.g., connecting to WiFi)
+- `onStateSet` callback can return `false` to reject the change
+
+## Animation
+
+The slider animates between positions with a 100ms ease-out-cubic transition, matching the native GTK behavior.
+
+[GTK4 Documentation →](https://docs.gtk.org/gtk4/class.Switch.html)

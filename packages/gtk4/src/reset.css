@@ -1,0 +1,62 @@
+/*
+ * GTK-JS CSS Reset
+ *
+ * Strips browser defaults inside the GtkProvider boundary so the
+ * Adwaita/GTK theme CSS has full control. Uses :where() for zero
+ * specificity so theme rules always win.
+ */
+
+body:has([data-gtk-provider]) {
+  margin: 0;
+  padding: 0;
+}
+
+:where([data-gtk-provider]),
+:where([data-gtk-provider] *) {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-sizing: content-box;
+  font-family: system-ui, sans-serif;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-decoration: none;
+  list-style: none;
+}
+
+:where([data-gtk-provider] button) {
+  appearance: none;
+  cursor: default;
+  outline: none;
+}
+
+:where([data-gtk-provider] input),
+:where([data-gtk-provider] textarea),
+:where([data-gtk-provider] select) {
+  appearance: none;
+  outline: none;
+}
+
+:where([data-gtk-provider] svg) {
+  display: block;
+}
+
+/* GTK clips widget rendering to border-radius automatically.
+   On the web, border-radius doesn't clip children without overflow. */
+:where([data-gtk-provider] .gtk-window.csd) {
+  overflow: clip;
+}
+
+/* GtkImage is a widget with intrinsic sizing — needs a proper box model */
+:where([data-gtk-provider] .gtk-image) {
+  display: inline-flex;
+}
+
+/* GtkLabel: inline text that vertically centers when stretched by a parent box.
+   In native GTK, GtkLabel defaults to valign=CENTER. */
+:where([data-gtk-provider] .gtk-label) {
+  display: inline-flex;
+  align-items: center;
+}

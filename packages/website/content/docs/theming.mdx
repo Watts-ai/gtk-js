@@ -1,0 +1,55 @@
+---
+title: Theming
+description: Customize colors, dark mode, and high contrast.
+---
+
+## Color Scheme
+
+Pass `colorScheme` to the provider:
+
+```tsx
+<AdwaitaProvider colorScheme="dark" icons={icons}>
+  {/* Always dark */}
+</AdwaitaProvider>
+```
+
+Options: `"light"`, `"dark"`, `"auto"` (follows `prefers-color-scheme`).
+
+## Accent Color
+
+Override the default GNOME blue accent:
+
+```tsx
+<AdwaitaProvider accentColor="#e66100" icons={icons}>
+  {/* Orange accent */}
+</AdwaitaProvider>
+```
+
+This sets `--accent-bg-color` on the root.
+
+## High Contrast
+
+```tsx
+<AdwaitaProvider highContrast icons={icons}>
+  {/* Stronger borders and contrast */}
+</AdwaitaProvider>
+```
+
+## CSS Custom Properties
+
+The Adwaita theme exposes many CSS custom properties you can override:
+
+| Property | Purpose |
+|----------|---------|
+| `--accent-bg-color` | Primary accent background |
+| `--accent-fg-color` | Text on accent backgrounds |
+| `--window-bg-color` | Window background |
+| `--window-fg-color` | Window text |
+| `--view-bg-color` | Content area background |
+| `--view-fg-color` | Content area text |
+| `--headerbar-bg-color` | Header bar background |
+| `--card-bg-color` | Card/boxed-list background |
+
+## Box Model
+
+GTK uses `content-box` sizing. The reset CSS applies `box-sizing: content-box` to all elements inside the provider. This means `min-height` and `min-width` refer to content only — padding is added on top.

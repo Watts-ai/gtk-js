@@ -1,0 +1,32 @@
+{
+  "name": "@gtk-js/website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 4000",
+    "build": "next build",
+    "start": "bunx serve out"
+  },
+  "dependencies": {
+    "@gtk-js/gtk4": "workspace:*",
+    "@gtk-js/adwaita": "workspace:*",
+    "@gtk-js/adwaita-icons": "workspace:*",
+    "@types/mdx": "^2",
+    "fumadocs-core": "latest",
+    "fumadocs-mdx": "latest",
+    "fumadocs-ui": "latest",
+    "fumadocs-typescript": "latest",
+    "next": "^16",
+    "react": "^19",
+    "react-dom": "^19",
+    "shiki": "^4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4",
+    "typescript": "^6"
+  }
+}

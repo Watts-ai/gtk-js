@@ -1,0 +1,44 @@
+---
+title: Installation
+description: Install gtk-js packages in your project.
+---
+
+## With Adwaita (recommended)
+
+```bash
+bun add @gtk-js/adwaita @gtk-js/adwaita-icons react react-dom
+```
+
+This gives you all GTK4 components + Adwaita components + the Adwaita theme CSS (auto-injected).
+
+## GTK4 only (no Adwaita)
+
+```bash
+bun add @gtk-js/gtk4 @gtk-js/gtk4-icons react react-dom
+```
+
+Use this if you want GTK4's default theme instead of Adwaita. You'll need to provide your own theme CSS via `GtkProvider`'s `cssHref` or `cssText` prop.
+
+## Provider Setup
+
+Wrap your app in a provider at the root:
+
+```tsx
+import { AdwaitaProvider } from "@gtk-js/adwaita";
+import * as icons from "@gtk-js/adwaita-icons";
+
+function App() {
+  return (
+    <AdwaitaProvider icons={icons}>
+      {/* Your app here */}
+    </AdwaitaProvider>
+  );
+}
+```
+
+The provider:
+- Injects the theme CSS (Adwaita or GTK4 default)
+- Injects the CSS reset (strips browser defaults inside the provider boundary)
+- Injects layout CSS (flexbox/grid classes for GTK layout managers)
+- Provides icon context (widgets load icons from the provider's icon set)
+- Provides theme context (accent color, color scheme, high contrast)

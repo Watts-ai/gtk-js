@@ -1,0 +1,65 @@
+---
+title: AdwActionRow
+description: A preferences list row with title, subtitle, and prefix/suffix slots.
+---
+
+import { AutoTypeTable } from "fumadocs-typescript/ui";
+
+## Preview
+
+```tsx
+import { AdwActionRow, AdwPreferencesGroup } from "@gtk-js/adwaita";
+
+<AdwPreferencesGroup title="Account">
+  <AdwActionRow
+    title="Username"
+    subtitle="hwittenborn"
+  />
+  <AdwActionRow
+    title="Email"
+    subtitle="hunter@example.com"
+    activatable
+    onActivated={() => alert("Edit email")}
+  />
+</AdwPreferencesGroup>
+```
+
+## CSS Node Tree
+
+```
+row[.activatable]
+  └── box.header
+      ├── box.prefixes
+      ├── box.title (vertical)
+      │   ├── label.title
+      │   └── label.subtitle
+      └── box.suffixes
+```
+
+## Props
+
+<AutoTypeTable
+  path="packages/adwaita/src/components/action-row.tsx"
+  name="AdwActionRowProps"
+/>
+
+## Prefix & Suffix Slots
+
+Use `prefix` and `suffix` props (or pass children which go into suffixes):
+
+```tsx
+<AdwActionRow
+  title="Volume"
+  prefix={<GtkImage iconName="audio-volume-high-symbolic" />}
+  suffix={<GtkScale value={75} min={0} max={100} />}
+/>
+```
+
+## Style Classes
+
+| Class | Effect |
+|-------|--------|
+| `.property` | Inverts emphasis: subtitle becomes prominent, title becomes dimmed |
+| `.monospace` | Applies monospace font to subtitle only |
+
+[Adwaita Documentation →](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.ActionRow.html)

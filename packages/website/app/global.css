@@ -1,0 +1,20 @@
+@import "tailwindcss" layer(tailwind);
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+
+/*
+ * Layer ordering: tailwind base/preflight loads first,
+ * then Adwaita CSS (injected by provider at runtime) wins
+ * because it's not in a layer and has higher priority.
+ */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+[data-gtk-provider] {
+  min-height: 100vh;
+}

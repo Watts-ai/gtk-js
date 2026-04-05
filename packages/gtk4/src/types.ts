@@ -1,0 +1,93 @@
+/** Layout direction for containers. */
+export type GtkOrientation = "horizontal" | "vertical";
+
+/** Text justification. */
+export type GtkJustification = "left" | "right" | "center" | "fill";
+
+/** Text ellipsize mode. */
+export type GtkEllipsizeMode = "none" | "start" | "middle" | "end";
+
+/** Baseline position within a row. */
+export type GtkBaselinePosition = "top" | "center" | "bottom";
+
+/** Text wrapping mode. */
+export type GtkWrapMode = "word" | "char" | "word-char";
+
+/** Widget alignment within allocated space. */
+export type GtkAlign = "fill" | "start" | "end" | "center" | "baseline-fill" | "baseline-center";
+
+/** List selection behavior. */
+export type GtkSelectionMode = "none" | "single" | "browse" | "multiple";
+
+/** Edge positioning. */
+export type GtkPositionType = "left" | "right" | "top" | "bottom";
+
+/** Scrollbar display policy. */
+export type GtkPolicyType = "always" | "automatic" | "never" | "external";
+
+/** Arrow/dropdown direction. */
+export type GtkArrowType = "up" | "down" | "left" | "right" | "none";
+
+/** Symbolic icon size. */
+export type GtkIconSize = "inherit" | "normal" | "large";
+
+/** Input method purpose hint. */
+export type GtkInputPurpose =
+  | "free-form"
+  | "alpha"
+  | "digits"
+  | "number"
+  | "phone"
+  | "url"
+  | "email"
+  | "name"
+  | "password"
+  | "pin";
+
+/** Level bar rendering mode. */
+export type GtkLevelBarMode = "continuous" | "discrete";
+
+/** Stack child transition animation. */
+export type GtkStackTransitionType =
+  | "none"
+  | "crossfade"
+  | "slide-right"
+  | "slide-left"
+  | "slide-up"
+  | "slide-down"
+  | "slide-left-right"
+  | "slide-up-down"
+  | "over-up"
+  | "over-down"
+  | "over-left"
+  | "over-right"
+  | "under-up"
+  | "under-down"
+  | "under-left"
+  | "under-right";
+
+/** SpinButton update policy. */
+export type GtkSpinButtonUpdatePolicy = "always" | "if-valid";
+
+/** Sort direction. */
+export type GtkSortType = "ascending" | "descending";
+
+/**
+ * Common window decoration layouts.
+ *
+ * The format is "start:end" where each side is a comma-separated list of
+ * button names (close, minimize, maximize, appmenu, menu).
+ * Any custom string in this format also works.
+ */
+export const DecorationLayout = {
+  /** GNOME default — close button only, on the right. */
+  GNOME: "appmenu:close",
+  /** Full controls — minimize, maximize, close on the right. */
+  FULL: "appmenu:minimize,maximize,close",
+  /** macOS style — close, minimize, maximize on the left. */
+  MACOS: "close,minimize,maximize:",
+  /** Elementary OS style — close on left, maximize on right. */
+  ELEMENTARY: "close:maximize",
+  /** No window controls. */
+  NONE: ":",
+} as const;

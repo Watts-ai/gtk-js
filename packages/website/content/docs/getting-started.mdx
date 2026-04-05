@@ -1,0 +1,53 @@
+---
+title: Getting Started
+description: Get up and running with gtk-js in minutes.
+---
+
+## What is gtk-js?
+
+gtk-js brings the GTK4 and Adwaita desktop UI ecosystem to the web via React. Every component mirrors the native GTK widget's CSS node tree, so the upstream Adwaita SCSS theme applies pixel-perfectly.
+
+## Quick Start
+
+```bash
+bun add @gtk-js/adwaita @gtk-js/adwaita-icons react react-dom
+```
+
+```tsx
+import { AdwaitaProvider } from "@gtk-js/adwaita";
+import * as adwaitaIcons from "@gtk-js/adwaita-icons";
+import {
+  GtkWindow, GtkHeaderBar, GtkWindowTitle,
+  GtkButton, GtkBox, GtkLabel,
+} from "@gtk-js/adwaita";
+
+function App() {
+  return (
+    <AdwaitaProvider icons={adwaitaIcons}>
+      <GtkWindow
+        titlebar={
+          <GtkHeaderBar
+            titleWidget={<GtkWindowTitle title="My App" />}
+          />
+        }
+      >
+        <GtkBox orientation="vertical" spacing={12} style={{ padding: 24 }}>
+          <GtkLabel label="Hello from gtk-js!" className="title-1" />
+          <GtkButton label="Click Me" className="suggested-action" />
+        </GtkBox>
+      </GtkWindow>
+    </AdwaitaProvider>
+  );
+}
+```
+
+## Packages
+
+| Package | Purpose |
+|---------|---------|
+| `@gtk-js/gtk4` | Core GTK4 React components |
+| `@gtk-js/adwaita` | Adwaita components + theme CSS (includes all GTK4 exports) |
+| `@gtk-js/adwaita-icons` | 644 Adwaita icon components |
+| `@gtk-js/gtk4-icons` | 123 GTK4 base icon components |
+
+Most apps should install `@gtk-js/adwaita` — it re-exports everything from `@gtk-js/gtk4` and bundles the Adwaita theme.

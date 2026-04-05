@@ -1,0 +1,12 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "getting-started",
+    "installation",
+    "theming",
+    "---GTK4 Components---",
+    "...gtk4",
+    "---Adwaita Components---",
+    "...adwaita"
+  ]
+}
