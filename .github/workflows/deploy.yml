@@ -32,8 +32,6 @@ jobs:
 
       - name: Build website
         run: bun run build
-        env:
-          BASE_PATH: /gtk-js
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
