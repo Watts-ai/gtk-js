@@ -42,6 +42,8 @@ enum Command {
     ToggleTextChecked,
     ToggleTextFlat,
     ToggleDisabled,
+    SpinRowDefault,
+    SpinRowDisabled,
 }
 
 /// Like [`render_and_extract`] but snapshots and extracts from the widget's first child
@@ -254,6 +256,12 @@ fn main() {
         }
         Command::ToggleDisabled => {
             render_and_extract::<cases::toggle_disabled::ToggleDisabled>((), output)
+        }
+        Command::SpinRowDefault => {
+            render_and_extract::<cases::spin_row_default::SpinRowDefault>((), output)
+        }
+        Command::SpinRowDisabled => {
+            render_and_extract::<cases::spin_row_disabled::SpinRowDisabled>((), output)
         }
     }
 }

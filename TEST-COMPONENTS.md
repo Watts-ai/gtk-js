@@ -73,7 +73,9 @@ Structural regression tests comparing native GTK4/Adwaita rendering against web 
 - [ ] AdwToggleGroup
 - [ ] AdwEntryRow
 - [ ] AdwPasswordEntryRow
-- [ ] AdwSpinRow
+- [x] AdwSpinRow
+  - [x] spin-row-default
+  - [x] spin-row-disabled
 - [ ] AdwComboRow
 - [ ] AdwSwitchRow
 - [ ] AdwExpanderRow

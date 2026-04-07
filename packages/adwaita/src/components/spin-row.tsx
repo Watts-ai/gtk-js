@@ -17,7 +17,17 @@ export interface AdwSpinRowProps extends HTMLAttributes<HTMLDivElement> {
 /**
  * AdwSpinRow — An ActionRow with an integrated spin button.
  *
- * CSS node: row.spin
+ * CSS node:
+ *   row.spin
+ *     └── box.header
+ *         ├── box.title (vertical)
+ *         │   ├── label.title
+ *         │   └── label.subtitle
+ *         └── box.suffixes
+ *             └── spinbutton.horizontal
+ *                 ├── text
+ *                 ├── button.down
+ *                 └── button.up
  *
  * @see https://gnome.pages.gitlab.gnome.org/libadwaita/doc/1-latest/class.SpinRow.html
  */
@@ -65,7 +75,7 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
     [clamp, isControlled, onValueChanged],
   );
 
-  const classes = ["gtk-row", "spin"];
+  const classes = ["gtk-row", "gtk-spin"];
   if (className) classes.push(className);
 
   return (
@@ -78,34 +88,36 @@ export const AdwSpinRow = forwardRef<HTMLDivElement, AdwSpinRowProps>(function A
           <span className="gtk-label title">{title}</span>
           {subtitle && <span className="gtk-label subtitle">{subtitle}</span>}
         </div>
-        <div className="gtk-spinbutton horizontal" style={{ gap: 6 }}>
-          <input
-            className="gtk-text"
-            type="text"
-            inputMode={numeric ? "numeric" : "text"}
-            value={value.toFixed(digits)}
-            style={{ textAlign: "right" }}
-            onChange={(e) => {
-              const parsed = parseFloat(e.target.value);
-              if (!isNaN(parsed)) setValue(parsed);
-            }}
-          />
-          <button
-            type="button"
-            className="gtk-button image-button down circular"
-            onClick={() => setValue(value - step)}
-            disabled={!wrap && value <= min}
-          >
-            <span className="gtk-image">{DecreaseIcon && <DecreaseIcon size={16} />}</span>
-          </button>
-          <button
-            type="button"
-            className="gtk-button image-button up circular"
-            onClick={() => setValue(value + step)}
-            disabled={!wrap && value >= max}
-          >
-            <span className="gtk-image">{IncreaseIcon && <IncreaseIcon size={16} />}</span>
-          </button>
+        <div className="gtk-box gtk-box-layout horizontal suffixes" style={{ gap: 6 }}>
+          <div className="gtk-spinbutton horizontal" style={{ gap: 6 }}>
+            <input
+              className="gtk-text"
+              type="text"
+              inputMode={numeric ? "numeric" : "text"}
+              value={value.toFixed(digits)}
+              style={{ textAlign: "right" }}
+              onChange={(e) => {
+                const parsed = parseFloat(e.target.value);
+                if (!isNaN(parsed)) setValue(parsed);
+              }}
+            />
+            <button
+              type="button"
+              className="gtk-button image-button down"
+              onClick={() => setValue(value - step)}
+              disabled={!wrap && value <= min}
+            >
+              <span className="gtk-image">{DecreaseIcon && <DecreaseIcon size={16} />}</span>
+            </button>
+            <button
+              type="button"
+              className="gtk-button image-button up"
+              onClick={() => setValue(value + step)}
+              disabled={!wrap && value >= max}
+            >
+              <span className="gtk-image">{IncreaseIcon && <IncreaseIcon size={16} />}</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
