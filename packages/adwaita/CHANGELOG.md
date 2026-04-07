@@ -1,5 +1,18 @@
 # @gtk-js/adwaita
 
+## 0.2.0
+
+### Minor Changes
+
+- e36fdea: Provide default icon sets for providers
+
+### Patch Changes
+
+- Updated dependencies [e36fdea]
+  - @gtk-js/gtk4@0.2.0
+  - @gtk-js/adwaita-icons@0.2.0
+  - @gtk-js/theme-adwaita@0.0.2
+
 ## 0.1.0
 
 ### Minor Changes
