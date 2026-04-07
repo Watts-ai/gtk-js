@@ -1,0 +1,10 @@
+FROM ghcr.io/gtk-rs/gtk4-rs/gtk4:latest
+
+RUN dnf install -y sassc unzip cargo xorg-x11-server-Xvfb
+
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/root/.bun/bin:$PATH"
+
+RUN bunx playwright install --with-deps chromium firefox
+
+WORKDIR /workspace
