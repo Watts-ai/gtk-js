@@ -32,6 +32,8 @@ enum Command {
     ButtonPill,
     ButtonDisabled,
     HeaderBarDefault,
+    HeaderBarFlat,
+    HeaderBarWithTitle,
     LinkDefault,
     LinkVisited,
     MenuButtonTextDefault,
@@ -233,6 +235,12 @@ fn main() {
         }
         Command::HeaderBarDefault => {
             render_and_extract::<cases::header_bar_default::HeaderBarDefault>((), output)
+        }
+        Command::HeaderBarFlat => {
+            render_and_extract::<cases::header_bar_flat::HeaderBarFlat>((), output)
+        }
+        Command::HeaderBarWithTitle => {
+            render_and_extract::<cases::header_bar_with_title::HeaderBarWithTitle>((), output)
         }
         Command::LinkDefault => render_and_extract::<cases::link_default::LinkDefault>((), output),
         Command::LinkVisited => render_and_extract::<cases::link_visited::LinkVisited>((), output),

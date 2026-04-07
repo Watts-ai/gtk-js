@@ -57,6 +57,8 @@ Structural regression tests comparing native GTK4/Adwaita rendering against web 
 - [ ] GtkScrollBar
 - [x] GtkHeaderBar
   - [x] default
+  - [x] flat
+  - [x] with-title
 - [ ] GtkActionBar
 - [ ] GtkSearchBar
 - [ ] GtkPopover

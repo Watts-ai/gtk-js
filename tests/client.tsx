@@ -5,6 +5,7 @@ import {
   GtkLinkButton,
   GtkMenuButton,
   GtkToggleButton,
+  GtkWindowTitle,
 } from "@gtk-js/adwaita";
 import { createRoot } from "react-dom/client";
 
@@ -50,6 +51,21 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // GtkHeaderBar cases
   "header-bar-default": () => <GtkHeaderBar showWindowControls={false} data-testid="target" />,
+  "header-bar-flat": () => (
+    <GtkHeaderBar
+      className="flat"
+      titleWidget={<GtkWindowTitle title="Title" />}
+      showWindowControls={false}
+      data-testid="target"
+    />
+  ),
+  "header-bar-with-title": () => (
+    <GtkHeaderBar
+      titleWidget={<GtkWindowTitle title="Title" />}
+      showWindowControls={false}
+      data-testid="target"
+    />
+  ),
 
   // Expected-failure cases: intentionally broken for testing the comparison
   "button-text-default-wrong-padding": () => (

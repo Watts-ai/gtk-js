@@ -7,6 +7,8 @@ pub mod button_text_destructive;
 pub mod button_text_flat;
 pub mod button_text_suggested;
 pub mod header_bar_default;
+pub mod header_bar_flat;
+pub mod header_bar_with_title;
 pub mod link_default;
 pub mod link_visited;
 pub mod menu_button_circular;
