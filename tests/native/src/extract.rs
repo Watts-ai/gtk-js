@@ -110,6 +110,7 @@ pub fn extract_with_widget<W: IsA<gtk::Widget>>(
     };
 
     let border = ctx.border();
+    eprintln!("DEBUG border: top={} right={} bottom={} left={}", border.top(), border.right(), border.bottom(), border.left());
     snapshot.border_widths = Sides {
         top: border.top() as f32,
         right: border.right() as f32,

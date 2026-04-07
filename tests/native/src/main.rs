@@ -42,6 +42,7 @@ enum Command {
     ToggleTextChecked,
     ToggleTextFlat,
     ToggleDisabled,
+    PopoverDefault,
 }
 
 /// Like [`render_and_extract`] but snapshots and extracts from the widget's first child
@@ -121,6 +122,123 @@ where
 
             window.close();
             std::process::exit(0);
+        });
+    });
+
+    app.run_with_args::<&str>(&[]);
+}
+
+/// Render a GtkPopover and extract structural properties from its `contents` child widget.
+///
+/// GtkPopover is a GtkNative widget with its own GDK popup surface. This helper:
+/// 1. Creates a window with an anchor box as content.
+/// 2. Sets the popover's parent to the anchor box.
+/// 3. After the window is presented (first idle), calls `popup()` to show the popover.
+/// 4. After a short delay to let the popup surface render, snapshots the `contents_widget`
+///    (the first child of the GtkPopover, which carries all the visible CSS properties).
+fn render_and_extract_popover_contents<C>(init: C::Init, output: Option<PathBuf>)
+where
+    C: SimpleComponent,
+    C::Root: IsA<gtk::Popover>,
+    C::Init: Copy,
+{
+    // Set environment before GTK init for deterministic rendering
+    unsafe {
+        std::env::set_var("GDK_SCALE", "1");
+    }
+
+    let app = adw::Application::builder()
+        .application_id("org.gtkjs.test")
+        .build();
+
+    app.connect_activate(move |app| {
+        let output = output.clone();
+        let settings = gtk::Settings::default().expect("Failed to get GtkSettings");
+        settings.set_gtk_font_name(Some("Cantarell 11"));
+        // Force Adwaita style manager to light mode
+        let style_manager = adw::StyleManager::default();
+        style_manager.set_color_scheme(adw::ColorScheme::ForceLight);
+
+        // Create an anchor widget — GtkPopover needs a parent widget in the window tree
+        let anchor = gtk::Box::builder()
+            .orientation(gtk::Orientation::Horizontal)
+            .halign(gtk::Align::Center)
+            .valign(gtk::Align::Center)
+            .width_request(100)
+            .height_request(50)
+            .build();
+
+        let window = adw::Window::builder()
+            .application(app)
+            .decorated(false)
+            .default_width(400)
+            .default_height(400)
+            .build();
+
+        window.set_content(Some(&anchor));
+
+        let component = C::builder().launch(init).detach();
+        let popover = component.widget().clone();
+        // Parent the popover to the anchor box (standard GTK popover usage)
+        popover.upcast_ref::<gtk::Popover>().set_parent(&anchor);
+
+        window.present();
+
+        let window_clone = window.clone();
+        let popover_clone = popover.clone();
+        let output_clone = output.clone();
+
+        // First idle: anchor is now realized/mapped — call popup() to show the popover
+        gtk::glib::idle_add_local_once(move || {
+            popover_clone.upcast_ref::<gtk::Popover>().popup();
+
+            let window_inner = window_clone;
+            let popover_inner = popover_clone;
+            let output_inner = output_clone;
+
+            // Use a short timeout to let the popup surface fully render before snapshotting.
+            // GtkPopover creates a separate GDK surface on popup(), and layout/rendering
+            // happens asynchronously — a single idle callback is not enough.
+            gtk::glib::timeout_add_local_once(
+                std::time::Duration::from_millis(50),
+                move || {
+                    let widget = popover_inner.upcast_ref::<gtk::Popover>();
+                    let inner = widget
+                        .first_child()
+                        .expect("render_and_extract_popover_contents: popover has no first child");
+
+                    let inner_width = inner.width();
+                    let inner_height = inner.height();
+
+                    if inner_width <= 0 || inner_height <= 0 {
+                        eprintln!(
+                            "Popover contents widget has zero size, layout may not have completed"
+                        );
+                        std::process::exit(1);
+                    }
+
+                    let paintable = gtk::WidgetPaintable::new(Some(&inner));
+                    let snapshot = gtk::Snapshot::new();
+                    paintable.snapshot(&snapshot, inner_width as f64, inner_height as f64);
+
+                    if let Some(node) = snapshot.to_node() {
+                        let result = extract::extract_with_widget(&node, &inner);
+                        let json = serde_json::to_string_pretty(&result)
+                            .expect("Failed to serialize snapshot");
+                        if let Some(ref path) = output_inner {
+                            std::fs::write(path, &json).expect("Failed to write output file");
+                        } else {
+                            println!("{json}");
+                        }
+                    } else {
+                        eprintln!("No render node produced");
+                        std::process::exit(1);
+                    }
+
+                    window_inner.close();
+                    std::process::exit(0);
+                },
+            );
         });
     });
 
@@ -254,6 +372,11 @@ fn main() {
         }
         Command::ToggleDisabled => {
             render_and_extract::<cases::toggle_disabled::ToggleDisabled>((), output)
+        }
+        Command::PopoverDefault => {
+            render_and_extract_popover_contents::<cases::popover_default::PopoverDefault>(
+                (), output,
+            )
         }
     }
 }
