@@ -31,6 +31,7 @@ enum Command {
     ButtonCircular,
     ButtonPill,
     ButtonDisabled,
+    HeaderBarDefault,
     LinkDefault,
     LinkVisited,
     MenuButtonTextDefault,
@@ -80,6 +81,9 @@ where
             .decorated(false)
             .default_width(200)
             .default_height(100)
+            // Empty title prevents GtkHeaderBar from auto-populating its title
+            // label with g_get_prgname() when placed as window content.
+            .title("")
             .build();
 
         let component = C::builder().launch(init).detach();
@@ -155,6 +159,9 @@ where
             .decorated(false)
             .default_width(200)
             .default_height(100)
+            // Empty title prevents GtkHeaderBar from auto-populating its title
+            // label with g_get_prgname() when placed as window content.
+            .title("")
             .build();
 
         let component = C::builder().launch(init).detach();
@@ -223,6 +230,9 @@ fn main() {
         Command::ButtonPill => render_and_extract::<cases::button_pill::ButtonPill>((), output),
         Command::ButtonDisabled => {
             render_and_extract::<cases::button_disabled::ButtonDisabled>((), output)
+        }
+        Command::HeaderBarDefault => {
+            render_and_extract::<cases::header_bar_default::HeaderBarDefault>((), output)
         }
         Command::LinkDefault => render_and_extract::<cases::link_default::LinkDefault>((), output),
         Command::LinkVisited => render_and_extract::<cases::link_visited::LinkVisited>((), output),

@@ -1,6 +1,7 @@
 import {
   AdwaitaProvider,
   GtkButton,
+  GtkHeaderBar,
   GtkLinkButton,
   GtkMenuButton,
   GtkToggleButton,
@@ -46,6 +47,9 @@ const cases: Record<string, () => React.ReactElement> = {
     <GtkToggleButton label="Toggle" hasFrame={false} data-testid="target" />
   ),
   "toggle-disabled": () => <GtkToggleButton label="Toggle" disabled data-testid="target" />,
+
+  // GtkHeaderBar cases
+  "header-bar-default": () => <GtkHeaderBar showWindowControls={false} data-testid="target" />,
 
   // Expected-failure cases: intentionally broken for testing the comparison
   "button-text-default-wrong-padding": () => (
