@@ -21,7 +21,7 @@ jobs:
           submodules: recursive
 
       - name: Install needed dependencies
-        run: dnf install -y sassc unzip
+        run: dnf install -y sassc unzip cargo
 
       - uses: oven-sh/setup-bun@v2
 

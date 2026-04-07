@@ -160,7 +160,13 @@ export function getNativeSnapshot(caseName: string): Promise<WidgetSnapshot> {
 
     if (exitCode !== 0) {
       const stderr = await new Response(proc.stderr).text();
-      throw new Error(`Native snapshot failed for ${caseName} (exit ${exitCode}):\n${stderr}`);
+      const hint =
+        exitCode === 127
+          ? "\nHint: exit code 127 means a command was not found. Are xvfb-run and cargo installed?"
+          : "";
+      throw new Error(
+        `Native snapshot failed for ${caseName} (exit ${exitCode}):\n${stderr}${hint}`,
+      );
     }
 
     return JSON.parse(output);
