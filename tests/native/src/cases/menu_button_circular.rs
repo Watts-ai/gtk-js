@@ -11,6 +11,7 @@ impl SimpleComponent for MenuButtonCircular {
 
     view! {
         gtk::MenuButton {
+            set_popover: Some(&gtk::Popover::new()),
             add_css_class: "circular",
         }
     }

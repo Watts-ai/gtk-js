@@ -12,6 +12,7 @@ impl SimpleComponent for MenuButtonFlat {
     view! {
         gtk::MenuButton {
             set_label: "Button",
+            set_popover: Some(&gtk::Popover::new()),
             add_css_class: "flat",
         }
     }

@@ -12,6 +12,7 @@ impl SimpleComponent for MenuButtonDisabled {
     view! {
         gtk::MenuButton {
             set_label: "Button",
+            set_popover: Some(&gtk::Popover::new()),
             set_sensitive: false,
         }
     }

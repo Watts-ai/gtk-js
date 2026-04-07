@@ -12,6 +12,7 @@ impl SimpleComponent for MenuButtonIcon {
     view! {
         gtk::MenuButton {
             set_icon_name: "open-menu-symbolic",
+            set_popover: Some(&gtk::Popover::new()),
         }
     }
 
