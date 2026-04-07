@@ -42,7 +42,9 @@ Structural regression tests comparing native GTK4/Adwaita rendering against web 
 - [ ] GtkLevelBar
 - [ ] GtkSpinner
 - [ ] GtkCalendar
-- [ ] GtkBox
+- [x] GtkBox
+  - [x] horizontal
+  - [x] vertical
 - [ ] GtkCenterBox
 - [ ] GtkGrid
 - [ ] GtkFlowBox

@@ -1,6 +1,8 @@
 import {
   AdwaitaProvider,
+  GtkBox,
   GtkButton,
+  GtkLabel,
   GtkLinkButton,
   GtkMenuButton,
   GtkToggleButton,
@@ -10,6 +12,18 @@ import { createRoot } from "react-dom/client";
 const caseName = window.location.pathname.slice(1);
 
 const cases: Record<string, () => React.ReactElement> = {
+  // GtkBox cases
+  "box-horizontal": () => (
+    <GtkBox data-testid="target">
+      <GtkLabel label="Label" />
+    </GtkBox>
+  ),
+  "box-vertical": () => (
+    <GtkBox orientation="vertical" data-testid="target">
+      <GtkLabel label="Label" />
+    </GtkBox>
+  ),
+
   "button-text-default": () => <GtkButton label="Button" data-testid="target" />,
   "button-text-flat": () => <GtkButton label="Button" hasFrame={false} data-testid="target" />,
   "button-text-suggested": () => (

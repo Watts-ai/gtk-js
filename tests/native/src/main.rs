@@ -23,6 +23,8 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    BoxHorizontal,
+    BoxVertical,
     ButtonTextDefault,
     ButtonTextFlat,
     ButtonTextSuggested,
@@ -204,6 +206,12 @@ fn main() {
     let output = cli.output;
 
     match cli.command {
+        Command::BoxHorizontal => {
+            render_and_extract::<cases::box_horizontal::BoxHorizontal>((), output)
+        }
+        Command::BoxVertical => {
+            render_and_extract::<cases::box_vertical::BoxVertical>((), output)
+        }
         Command::ButtonTextDefault => {
             render_and_extract::<cases::button_text_default::ButtonTextDefault>((), output)
         }
