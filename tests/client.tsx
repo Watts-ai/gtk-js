@@ -3,6 +3,7 @@ import {
   GtkButton,
   GtkLinkButton,
   GtkMenuButton,
+  GtkSwitch,
   GtkToggleButton,
 } from "@gtk-js/adwaita";
 import { createRoot } from "react-dom/client";
@@ -46,6 +47,11 @@ const cases: Record<string, () => React.ReactElement> = {
     <GtkToggleButton label="Toggle" hasFrame={false} data-testid="target" />
   ),
   "toggle-disabled": () => <GtkToggleButton label="Toggle" disabled data-testid="target" />,
+
+  // GtkSwitch cases
+  "switch-default": () => <GtkSwitch data-testid="target" />,
+  "switch-active": () => <GtkSwitch active data-testid="target" />,
+  "switch-disabled": () => <GtkSwitch disabled data-testid="target" />,
 
   // Expected-failure cases: intentionally broken for testing the comparison
   "button-text-default-wrong-padding": () => (

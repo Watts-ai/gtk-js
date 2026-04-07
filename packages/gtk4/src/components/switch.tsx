@@ -1,6 +1,6 @@
-import React, { forwardRef, type HTMLAttributes, useCallback, useRef, useState } from "react";
+import React, { type ButtonHTMLAttributes, forwardRef, useCallback, useRef, useState } from "react";
 
-export interface GtkSwitchProps extends HTMLAttributes<HTMLDivElement> {
+export interface GtkSwitchProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** User-facing toggle state. */
   active?: boolean;
   /**
@@ -25,7 +25,7 @@ export interface GtkSwitchProps extends HTMLAttributes<HTMLDivElement> {
  *
  * @see https://docs.gtk.org/gtk4/class.Switch.html
  */
-export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function GtkSwitch(
+export const GtkSwitch = forwardRef<HTMLButtonElement, GtkSwitchProps>(function GtkSwitch(
   { active: controlledActive, state: controlledState, onStateSet, className, onClick, ...rest },
   ref,
 ) {
@@ -35,7 +35,7 @@ export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function Gtk
   const state = controlledState ?? active;
 
   // Drag state
-  const switchRef = useRef<HTMLDivElement>(null);
+  const switchRef = useRef<HTMLButtonElement>(null);
   const [dragging, setDragging] = useState(false);
   const dragStartX = useRef(0);
   const dragStartActive = useRef(false);
@@ -49,7 +49,7 @@ export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function Gtk
   }, [active, isControlled, onStateSet]);
 
   const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
+    (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!dragging) toggle();
       onClick?.(e);
     },
@@ -57,7 +57,7 @@ export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function Gtk
   );
 
   const handlePointerDown = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
+    (e: React.PointerEvent<HTMLButtonElement>) => {
       if (e.button !== 0) return;
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
       dragStartX.current = e.clientX;
@@ -67,14 +67,14 @@ export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function Gtk
     [active],
   );
 
-  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
     if (!(e.currentTarget as HTMLElement).hasPointerCapture(e.pointerId)) return;
     const dx = e.clientX - dragStartX.current;
     if (Math.abs(dx) > 6) setDragging(true);
   }, []);
 
   const handlePointerUp = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
+    (e: React.PointerEvent<HTMLButtonElement>) => {
       if (!(e.currentTarget as HTMLElement).hasPointerCapture(e.pointerId)) return;
       (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
       if (dragging) {
@@ -88,7 +88,7 @@ export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function Gtk
   );
 
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
+    (e: React.KeyboardEvent<HTMLButtonElement>) => {
       if (e.key === " " || e.key === "Enter") {
         e.preventDefault();
         toggle();
@@ -101,11 +101,11 @@ export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function Gtk
   if (className) classes.push(className);
 
   return (
-    <div
+    <button
       ref={ref ?? switchRef}
+      type="button"
       role="switch"
       aria-checked={state}
-      tabIndex={0}
       className={classes.join(" ")}
       data-checked={state || undefined}
       onClick={handleClick}
@@ -118,6 +118,6 @@ export const GtkSwitch = forwardRef<HTMLDivElement, GtkSwitchProps>(function Gtk
       <span className="gtk-image" />
       <span className="gtk-image" />
       <span className="gtk-slider" />
-    </div>
+    </button>
   );
 });

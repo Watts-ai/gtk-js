@@ -42,6 +42,9 @@ enum Command {
     ToggleTextChecked,
     ToggleTextFlat,
     ToggleDisabled,
+    SwitchDefault,
+    SwitchActive,
+    SwitchDisabled,
 }
 
 /// Like [`render_and_extract`] but snapshots and extracts from the widget's first child
@@ -254,6 +257,15 @@ fn main() {
         }
         Command::ToggleDisabled => {
             render_and_extract::<cases::toggle_disabled::ToggleDisabled>((), output)
+        }
+        Command::SwitchDefault => {
+            render_and_extract::<cases::switch_default::SwitchDefault>((), output)
+        }
+        Command::SwitchActive => {
+            render_and_extract::<cases::switch_active::SwitchActive>((), output)
+        }
+        Command::SwitchDisabled => {
+            render_and_extract::<cases::switch_disabled::SwitchDisabled>((), output)
         }
     }
 }
