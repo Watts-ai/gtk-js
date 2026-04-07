@@ -86,15 +86,13 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
     if (!disabled) setOpen((o) => !o);
   }, [disabled]);
 
-  // Extract data-testid from outer div props so it targets the inner button element.
-  // This is necessary because the test harness snapshots the inner toggle button
-  // (the actual visual element) rather than the transparent container div.
-  const { "data-testid": dataTestId, ...outerRest } = rest as typeof rest & {
-    "data-testid"?: string;
-  };
-
   return (
-    <div ref={ref} className={rootClasses.join(" ")} {...outerRest}>
+    <div
+      ref={ref}
+      className={rootClasses.join(" ")}
+      aria-disabled={disabled || undefined}
+      {...rest}
+    >
       <button
         type="button"
         className={btnClasses.join(" ")}
@@ -102,7 +100,6 @@ export const GtkMenuButton = forwardRef<HTMLDivElement, GtkMenuButtonProps>(func
         aria-expanded={open}
         data-checked={open || undefined}
         disabled={disabled}
-        data-testid={dataTestId}
         onClick={toggle}
       >
         {hasCustomChild ? (
