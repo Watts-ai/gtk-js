@@ -141,12 +141,12 @@ export function getNativeSnapshot(caseName: string): Promise<WidgetSnapshot> {
   if (cached) return cached;
 
   const promise = (async () => {
-    const proc = Bun.spawn(["xvfb-run", "-a", "tests/native/target/debug/gtk-js-test", caseName], {
-      stdout: "pipe",
-      stderr: "pipe",
-    });
+    const tmpFile = `${import.meta.dir}/.native-output-${caseName}-${Date.now()}.json`;
+    const proc = Bun.spawn(
+      ["xvfb-run", "-a", "tests/native/target/debug/gtk-js-test", "--output", tmpFile, caseName],
+      { stdout: "inherit", stderr: "pipe" },
+    );
 
-    const output = await new Response(proc.stdout).text();
     const exitCode = await proc.exited;
 
     if (exitCode !== 0) {
@@ -160,6 +160,9 @@ export function getNativeSnapshot(caseName: string): Promise<WidgetSnapshot> {
       );
     }
 
+    const file = Bun.file(tmpFile);
+    const output = await file.text();
+    await file.unlink();
     return JSON.parse(output);
   })();
 
