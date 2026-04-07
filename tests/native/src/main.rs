@@ -31,6 +31,9 @@ enum Command {
     ButtonCircular,
     ButtonPill,
     ButtonDisabled,
+    ImageIconDefault,
+    ImageIconNormal,
+    ImageIconLarge,
     LinkDefault,
     LinkVisited,
     MenuButtonTextDefault,
@@ -223,6 +226,15 @@ fn main() {
         Command::ButtonPill => render_and_extract::<cases::button_pill::ButtonPill>((), output),
         Command::ButtonDisabled => {
             render_and_extract::<cases::button_disabled::ButtonDisabled>((), output)
+        }
+        Command::ImageIconDefault => {
+            render_and_extract::<cases::image_icon_default::ImageIconDefault>((), output)
+        }
+        Command::ImageIconNormal => {
+            render_and_extract::<cases::image_icon_normal::ImageIconNormal>((), output)
+        }
+        Command::ImageIconLarge => {
+            render_and_extract::<cases::image_icon_large::ImageIconLarge>((), output)
         }
         Command::LinkDefault => render_and_extract::<cases::link_default::LinkDefault>((), output),
         Command::LinkVisited => render_and_extract::<cases::link_visited::LinkVisited>((), output),

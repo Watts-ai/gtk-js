@@ -30,7 +30,10 @@ Structural regression tests comparing native GTK4/Adwaita rendering against web 
 - [ ] GtkCheckButton
 - [ ] GtkSwitch
 - [ ] GtkLabel
-- [ ] GtkImage
+- [x] GtkImage
+  - [x] icon-default
+  - [x] icon-normal
+  - [x] icon-large
 - [ ] GtkEntry
 - [ ] GtkPasswordEntry
 - [ ] GtkSearchEntry

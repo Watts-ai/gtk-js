@@ -1,6 +1,7 @@
 import {
   AdwaitaProvider,
   GtkButton,
+  GtkImage,
   GtkLinkButton,
   GtkMenuButton,
   GtkToggleButton,
@@ -24,6 +25,15 @@ const cases: Record<string, () => React.ReactElement> = {
   ),
   "button-pill": () => <GtkButton label="Button" className="pill" data-testid="target" />,
   "button-disabled": () => <GtkButton label="Button" disabled data-testid="target" />,
+
+  // GtkImage cases
+  "image-icon-default": () => <GtkImage iconName="open-menu-symbolic" data-testid="target" />,
+  "image-icon-normal": () => (
+    <GtkImage iconName="open-menu-symbolic" iconSize="normal" data-testid="target" />
+  ),
+  "image-icon-large": () => (
+    <GtkImage iconName="open-menu-symbolic" iconSize="large" data-testid="target" />
+  ),
 
   // GtkLinkButton cases
   "link-default": () => (

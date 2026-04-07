@@ -12,6 +12,18 @@ export interface GtkImageProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 /**
+ * Convert a GTK icon name (kebab-case, optional -symbolic suffix) to the
+ * PascalCase key used in the icon map (e.g. "open-menu-symbolic" → "OpenMenu").
+ */
+function gtkNameToIconKey(name: string): string {
+  return name
+    .replace(/-symbolic$/, "")
+    .split(/[-_]/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+}
+
+/**
  * GtkImage — A widget that displays an icon.
  *
  * CSS node: image[.normal-icons|.large-icons]
@@ -22,7 +34,8 @@ export const GtkImage = forwardRef<HTMLSpanElement, GtkImageProps>(function GtkI
   { iconName, pixelSize = -1, iconSize = "inherit", className, ...rest },
   ref,
 ) {
-  const Icon = useIcon(iconName ?? "");
+  const iconKey = iconName ? gtkNameToIconKey(iconName) : "";
+  const Icon = useIcon(iconKey);
 
   const classes = ["gtk-image"];
   if (iconSize === "normal") classes.push("normal-icons");
