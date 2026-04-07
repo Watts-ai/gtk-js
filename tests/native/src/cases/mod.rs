@@ -1,5 +1,9 @@
 pub mod button_circular;
 pub mod button_disabled;
+pub mod button_row_default;
+pub mod button_row_destructive;
+pub mod button_row_disabled;
+pub mod button_row_suggested;
 pub mod button_icon;
 pub mod button_pill;
 pub mod button_text_default;

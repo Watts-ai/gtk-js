@@ -23,6 +23,10 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    ButtonRowDefault,
+    ButtonRowSuggested,
+    ButtonRowDestructive,
+    ButtonRowDisabled,
     ButtonTextDefault,
     ButtonTextFlat,
     ButtonTextSuggested,
@@ -204,6 +208,18 @@ fn main() {
     let output = cli.output;
 
     match cli.command {
+        Command::ButtonRowDefault => {
+            render_and_extract::<cases::button_row_default::ButtonRowDefault>((), output)
+        }
+        Command::ButtonRowSuggested => {
+            render_and_extract::<cases::button_row_suggested::ButtonRowSuggested>((), output)
+        }
+        Command::ButtonRowDestructive => {
+            render_and_extract::<cases::button_row_destructive::ButtonRowDestructive>((), output)
+        }
+        Command::ButtonRowDisabled => {
+            render_and_extract::<cases::button_row_disabled::ButtonRowDisabled>((), output)
+        }
         Command::ButtonTextDefault => {
             render_and_extract::<cases::button_text_default::ButtonTextDefault>((), output)
         }

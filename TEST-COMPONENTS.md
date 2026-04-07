@@ -68,7 +68,11 @@ Structural regression tests comparing native GTK4/Adwaita rendering against web 
 
 - [ ] AdwActionRow
 - [ ] AdwButtonContent
-- [ ] AdwButtonRow
+- [x] AdwButtonRow
+  - [x] default
+  - [x] suggested
+  - [x] destructive
+  - [x] disabled
 - [ ] AdwSplitButton
 - [ ] AdwToggleGroup
 - [ ] AdwEntryRow

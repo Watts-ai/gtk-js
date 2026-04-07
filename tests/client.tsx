@@ -1,4 +1,5 @@
 import {
+  AdwButtonRow,
   AdwaitaProvider,
   GtkButton,
   GtkLinkButton,
@@ -10,6 +11,16 @@ import { createRoot } from "react-dom/client";
 const caseName = window.location.pathname.slice(1);
 
 const cases: Record<string, () => React.ReactElement> = {
+  // AdwButtonRow cases
+  "button-row-default": () => <AdwButtonRow title="Button" data-testid="target" />,
+  "button-row-suggested": () => (
+    <AdwButtonRow title="Button" className="suggested-action" data-testid="target" />
+  ),
+  "button-row-destructive": () => (
+    <AdwButtonRow title="Button" className="destructive-action" data-testid="target" />
+  ),
+  "button-row-disabled": () => <AdwButtonRow title="Button" disabled data-testid="target" />,
+
   "button-text-default": () => <GtkButton label="Button" data-testid="target" />,
   "button-text-flat": () => <GtkButton label="Button" hasFrame={false} data-testid="target" />,
   "button-text-suggested": () => (
