@@ -14,6 +14,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container: ghcr.io/gtk-rs/gtk4-rs/gtk4:latest
+    env:
+      HOME: /root
 
     steps:
       - uses: actions/checkout@v4
