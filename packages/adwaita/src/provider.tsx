@@ -1,3 +1,4 @@
+import * as adwaitaIcons from "@gtk-js/adwaita-icons";
 import { GtkProvider, type GtkProviderProps } from "@gtk-js/gtk4";
 import { AdwaitaTheme } from "@gtk-js/theme-adwaita";
 import { type ReactNode, useMemo } from "react";
@@ -26,5 +27,5 @@ export function AdwaitaProvider({
     () => new AdwaitaTheme({ colorScheme, accentColor }),
     [colorScheme, accentColor],
   );
-  return <GtkProvider theme={theme} {...rest} />;
+  return <GtkProvider theme={theme} icons={adwaitaIcons} {...rest} />;
 }

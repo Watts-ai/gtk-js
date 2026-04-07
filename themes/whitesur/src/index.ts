@@ -1,10 +1,13 @@
 import { GtkTheme } from "@gtk-js/gtk-css";
-import light from "../dist/light_default.css" with { type: "text" };
 import dark from "../dist/dark_default.css" with { type: "text" };
+import light from "../dist/light_default.css" with { type: "text" };
 
 function resolveScheme(scheme: "light" | "dark" | "auto"): "light" | "dark" {
   if (scheme !== "auto") return scheme;
-  if (typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: dark)").matches) {
+  if (
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-color-scheme: dark)").matches
+  ) {
     return "dark";
   }
   return "light";

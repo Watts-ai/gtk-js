@@ -37,9 +37,7 @@ export class AdwaitaTheme extends GtkTheme {
 
   getCSS() {
     const base =
-      this.colorScheme === "dark" ? darkCSS
-      : this.colorScheme === "light" ? lightCSS
-      : autoCSS;
+      this.colorScheme === "dark" ? darkCSS : this.colorScheme === "light" ? lightCSS : autoCSS;
 
     // Append accent override on top of the default baked into the CSS
     return (

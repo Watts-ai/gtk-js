@@ -216,7 +216,13 @@ export const GtkPopover = forwardRef<HTMLDivElement, GtkPopoverProps>(function G
   };
 
   const content = (
-    <div ref={resolvedRef} className={classes.join(" ")} data-position={position} style={positionStyle} {...rest}>
+    <div
+      ref={resolvedRef}
+      className={classes.join(" ")}
+      data-position={position}
+      style={positionStyle}
+      {...rest}
+    >
       {hasArrow && <div ref={arrowRef} className="gtk-arrow" />}
       <div className="gtk-contents">{children}</div>
     </div>

@@ -1,10 +1,8 @@
 import { compileGtkCSS } from "@gtk-js/gtk-css/compile";
 import { mkdirSync } from "fs";
 
-const scssPath = new URL(
-  "../../upstream/libadwaita/src/stylesheet/default.scss",
-  import.meta.url,
-).pathname;
+const scssPath = new URL("../../upstream/libadwaita/src/stylesheet/default.scss", import.meta.url)
+  .pathname;
 
 const outDir = new URL("dist/", import.meta.url).pathname;
 mkdirSync(outDir, { recursive: true });

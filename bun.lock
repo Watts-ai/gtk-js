@@ -13,8 +13,9 @@
     },
     "packages/adwaita": {
       "name": "@gtk-js/adwaita",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "dependencies": {
+        "@gtk-js/adwaita-icons": "workspace:*",
         "@gtk-js/gtk4": "workspace:*",
         "@gtk-js/theme-adwaita": "workspace:*",
       },
@@ -29,7 +30,7 @@
     },
     "packages/adwaita-icons": {
       "name": "@gtk-js/adwaita-icons",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "dependencies": {
         "@gtk-js/icon-helpers": "workspace:*",
       },
@@ -42,7 +43,7 @@
     },
     "packages/gtk-css": {
       "name": "@gtk-js/gtk-css",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "dependencies": {
         "postcss": "^8.5.8",
         "sass": "^1.99.0",
@@ -50,8 +51,9 @@
     },
     "packages/gtk4": {
       "name": "@gtk-js/gtk4",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "dependencies": {
+        "@gtk-js/gtk4-icons": "workspace:*",
         "@gtk-js/icon-helpers": "workspace:*",
       },
       "devDependencies": {
@@ -65,7 +67,7 @@
     },
     "packages/gtk4-icons": {
       "name": "@gtk-js/gtk4-icons",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "dependencies": {
         "@gtk-js/icon-helpers": "workspace:*",
       },
@@ -78,7 +80,7 @@
     },
     "packages/icon-helpers": {
       "name": "@gtk-js/icon-helpers",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "devDependencies": {
         "@types/react": "^19",
       },

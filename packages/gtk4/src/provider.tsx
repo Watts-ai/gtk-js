@@ -1,3 +1,5 @@
+import { type GtkTheme } from "@gtk-js/gtk-css";
+import * as defaultIcons from "@gtk-js/gtk4-icons";
 import {
   type CSSProperties,
   createContext,
@@ -5,7 +7,6 @@ import {
   useContext,
   useInsertionEffect,
 } from "react";
-import { type GtkTheme } from "@gtk-js/gtk-css";
 import { type IconMap, IconProvider } from "./icon-context.tsx";
 import layoutCSS from "./layouts/layout.css" with { type: "text" };
 import resetCSS from "./reset.css" with { type: "text" };
@@ -47,7 +48,7 @@ export function GtkProvider({
   theme,
   cssHref,
   cssText,
-  icons = {},
+  icons = defaultIcons,
   style,
   children,
 }: GtkProviderProps) {
@@ -111,11 +112,7 @@ export function GtkProvider({
   return (
     <ThemeContext.Provider value={theme}>
       <IconProvider value={icons}>
-        <div
-          data-gtk-provider=""
-          className="background"
-          style={style}
-        >
+        <div data-gtk-provider="" className="background" style={style}>
           {children}
         </div>
       </IconProvider>

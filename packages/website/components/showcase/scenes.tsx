@@ -301,7 +301,12 @@ export function CodeBadge({ code, animateIn }: { code: string; animateIn?: boole
         createPortal(
           <IconProvider value={icons}>
             <div
-              style={{ position: "fixed", top: popoverPos.top, left: popoverPos.left, zIndex: 9999 }}
+              style={{
+                position: "fixed",
+                top: popoverPos.top,
+                left: popoverPos.left,
+                zIndex: 9999,
+              }}
             >
               <GtkPopover
                 visible
@@ -377,11 +382,7 @@ export function ShowcasePlayer({
 
   const titlebar = show(STEP_HEADERBAR) ? (
     <GtkHeaderBar
-      titleWidget={
-        show(STEP_WINDOW_TITLE) ? (
-          <GtkWindowTitle title="Harmonix" />
-        ) : undefined
-      }
+      titleWidget={show(STEP_WINDOW_TITLE) ? <GtkWindowTitle title="Harmonix" /> : undefined}
       start={startSlot}
       decorationLayout="appmenu:maximize,close"
       onWindowToggleMaximized={onWindowToggleMaximized}

@@ -1,11 +1,8 @@
 import { compileGtkCSS } from "@gtk-js/gtk-css/compile";
-import { mkdirSync, writeFileSync, unlinkSync, readFileSync } from "fs";
 import { XMLParser } from "fast-xml-parser";
+import { mkdirSync, readFileSync, unlinkSync, writeFileSync } from "fs";
 
-const upstreamDir = new URL(
-  "../../upstream/whitesur-gtk-theme/src",
-  import.meta.url,
-).pathname;
+const upstreamDir = new URL("../../upstream/whitesur-gtk-theme/src", import.meta.url).pathname;
 
 const outDir = new URL("dist/", import.meta.url).pathname;
 mkdirSync(outDir, { recursive: true });
@@ -79,8 +76,12 @@ $accent_type: 'fixed';
       results[key] = css;
       process.stdout.write(`  ${key}: ${css.length}b\n`);
     } finally {
-      try { unlinkSync(`${sassDir}/_theme-options-temp.scss`); } catch {}
-      try { unlinkSync(`${sassDir}/_gtk-base-temp.scss`); } catch {}
+      try {
+        unlinkSync(`${sassDir}/_theme-options-temp.scss`);
+      } catch {}
+      try {
+        unlinkSync(`${sassDir}/_gtk-base-temp.scss`);
+      } catch {}
     }
   }
 }
@@ -92,7 +93,7 @@ for (const [key, css] of Object.entries(results)) {
 
 // Write JS index that exports all variants as named string constants
 const indexLines = Object.keys(results).map(
-  (key) => `export { default as ${key} } from "./${key}.css" with { type: "text" };`
+  (key) => `export { default as ${key} } from "./${key}.css" with { type: "text" };`,
 );
 writeFileSync(`${outDir}index.ts`, indexLines.join("\n") + "\n");
 

@@ -138,7 +138,9 @@ export function preprocess(rawCSS: string, options?: CompileOptions): string {
 
     const lightOverrides = [...lightColors.entries()]
       .filter(([name]) => darkColors.has(name))
-      .map(([name, val]) => `  --${name.replace(/_/g, "-")}: ${resolveColorRef(val, lightColors)};`);
+      .map(
+        ([name, val]) => `  --${name.replace(/_/g, "-")}: ${resolveColorRef(val, lightColors)};`,
+      );
     if (lightOverrides.length > 0) {
       result += `\n[data-gtk-provider][data-color-scheme="light"] {\n${lightOverrides.join("\n")}\n}\n`;
     }

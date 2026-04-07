@@ -1,5 +1,6 @@
 // Provider
 
+export { GtkTheme } from "@gtk-js/gtk-css";
 export type { GtkActionBarProps } from "./components/action-bar.tsx";
 export { GtkActionBar } from "./components/action-bar.tsx";
 export type { GtkBoxProps } from "./components/box.tsx";
@@ -99,7 +100,6 @@ export type { GtkCenterLayoutProps } from "./layouts/center-layout.tsx";
 export { GtkCenterLayout } from "./layouts/center-layout.tsx";
 export type { GtkProviderProps } from "./provider.tsx";
 export { GtkProvider, useGtkTheme } from "./provider.tsx";
-export { GtkTheme } from "@gtk-js/gtk-css";
 
 // Types
 export type * from "./types.ts";

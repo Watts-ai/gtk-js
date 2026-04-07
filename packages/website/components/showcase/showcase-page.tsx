@@ -56,7 +56,17 @@ function useSteppedTyping() {
     }
     const t = setTimeout(() => setCharIndex((i) => i + 1), 1000 / CHARS_PER_SEC);
     return () => clearTimeout(t);
-  }, [started, charIndex, stepCode, stepIndex, steps.length, step, done, completedCode, visibleSteps]);
+  }, [
+    started,
+    charIndex,
+    stepCode,
+    stepIndex,
+    steps.length,
+    step,
+    done,
+    completedCode,
+    visibleSteps,
+  ]);
 
   const displayCode =
     completedCode + (completedCode && charIndex > 0 ? "\n" : "") + stepCode.slice(0, charIndex);
@@ -102,7 +112,9 @@ export function ShowcasePage() {
     null,
   );
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (loading) return;
@@ -113,7 +125,14 @@ export function ShowcasePage() {
     const t4 = setTimeout(() => setSpinnerState("hidden"), 3500);
     const t5 = setTimeout(() => setCodeBadge("collapsing"), 3800);
     const t6 = setTimeout(() => setCodeBadge("docked"), 4600);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); clearTimeout(t6); };
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+      clearTimeout(t5);
+      clearTimeout(t6);
+    };
   }, [loading]);
 
   useEffect(() => {
@@ -136,7 +155,9 @@ export function ShowcasePage() {
     setPos({ x: dragRef.current.origX + dx, y: dragRef.current.origY + dy });
   };
 
-  const handlePointerUp = () => { dragRef.current = null; };
+  const handlePointerUp = () => {
+    dragRef.current = null;
+  };
 
   const handleToggleMaximized = () => {
     setMaximized((m) => {
@@ -164,10 +185,7 @@ export function ShowcasePage() {
     <GtkProvider theme={theme} icons={adwaitaIcons} style={{ minHeight: "100vh" }}>
       <div style={{ display: "flex", justifyContent: "flex-end", padding: "16px 24px 0" }}>
         <div style={{ position: "relative" }}>
-          <GtkButton
-            hasFrame={false}
-            onClicked={() => setSettingsOpen((o) => !o)}
-          >
+          <GtkButton hasFrame={false} onClicked={() => setSettingsOpen((o) => !o)}>
             <ApplicationsSystem size={20} />
           </GtkButton>
           <GtkPopover
@@ -179,7 +197,11 @@ export function ShowcasePage() {
             <GtkBox orientation="vertical" spacing={12} style={{ padding: 12 }}>
               {/* Theme picker */}
               <GtkBox orientation="vertical" spacing={6}>
-                <GtkLabel label="Theme" className="dim-label" style={{ fontSize: "0.8rem", alignSelf: "flex-start" }} />
+                <GtkLabel
+                  label="Theme"
+                  className="dim-label"
+                  style={{ fontSize: "0.8rem", alignSelf: "flex-start" }}
+                />
                 <GtkBox spacing={6}>
                   {(["adwaita", "whitesur"] as ThemeName[]).map((t) => (
                     <GtkButton
@@ -194,7 +216,11 @@ export function ShowcasePage() {
 
               {/* Color scheme */}
               <GtkBox orientation="vertical" spacing={6}>
-                <GtkLabel label="Mode" className="dim-label" style={{ fontSize: "0.8rem", alignSelf: "flex-start" }} />
+                <GtkLabel
+                  label="Mode"
+                  className="dim-label"
+                  style={{ fontSize: "0.8rem", alignSelf: "flex-start" }}
+                />
                 <GtkBox spacing={6}>
                   {(["auto", "light", "dark"] as const).map((s) => (
                     <GtkButton
@@ -210,7 +236,11 @@ export function ShowcasePage() {
               {/* Accent (Adwaita only) */}
               {themeName === "adwaita" && (
                 <GtkBox orientation="vertical" spacing={6}>
-                  <GtkLabel label="Accent" className="dim-label" style={{ fontSize: "0.8rem", alignSelf: "flex-start" }} />
+                  <GtkLabel
+                    label="Accent"
+                    className="dim-label"
+                    style={{ fontSize: "0.8rem", alignSelf: "flex-start" }}
+                  />
                   <GtkBox spacing={6} style={{ flexWrap: "wrap" }}>
                     {ADWAITA_ACCENT_PRESETS.map((color) => (
                       <button
@@ -221,7 +251,8 @@ export function ShowcasePage() {
                           width: 22,
                           height: 22,
                           borderRadius: "50%",
-                          border: adwaitaAccent === color ? "2px solid white" : "2px solid transparent",
+                          border:
+                            adwaitaAccent === color ? "2px solid white" : "2px solid transparent",
                           boxShadow: adwaitaAccent === color ? `0 0 0 2px ${color}` : "none",
                           background: color,
                           cursor: "pointer",
@@ -256,99 +287,99 @@ export function ShowcasePage() {
       </div>
 
       <div style={{ maxWidth: 920, margin: "0 auto", padding: "0 24px 48px" }}>
-          <AudioProvider>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: codeCollapsed ? "0fr 1fr" : "1fr 1fr",
-                transition: "grid-template-columns 600ms cubic-bezier(0.4, 0, 0.2, 1)",
-                borderRadius: 12,
-              }}
-            >
-              {/* Code panel */}
-              <div style={{ overflow: "hidden", minWidth: 0 }}>
+        <AudioProvider>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: codeCollapsed ? "0fr 1fr" : "1fr 1fr",
+              transition: "grid-template-columns 600ms cubic-bezier(0.4, 0, 0.2, 1)",
+              borderRadius: 12,
+            }}
+          >
+            {/* Code panel */}
+            <div style={{ overflow: "hidden", minWidth: 0 }}>
+              <div
+                ref={codeRef}
+                style={{
+                  padding: 20,
+                  overflowY: "auto",
+                  overflowX: "auto",
+                  maxHeight: 420,
+                  borderRight: "1px solid rgba(128,128,128,0.15)",
+                  scrollBehavior: "smooth",
+                  background: "#0d1117",
+                  borderRadius: 12,
+                  opacity: codeCollapsing || codeCollapsed ? 0 : 1,
+                  transition: "opacity 500ms ease",
+                  position: "relative",
+                }}
+              >
+                <SyntaxHighlight code={"// app.tsx\n" + displayCode} cursor={cursor} />
                 <div
-                  ref={codeRef}
                   style={{
-                    padding: 20,
-                    overflowY: "auto",
-                    overflowX: "auto",
-                    maxHeight: 420,
-                    borderRight: "1px solid rgba(128,128,128,0.15)",
-                    scrollBehavior: "smooth",
-                    background: "#0d1117",
-                    borderRadius: 12,
-                    opacity: codeCollapsing || codeCollapsed ? 0 : 1,
-                    transition: "opacity 500ms ease",
-                    position: "relative",
+                    position: "absolute",
+                    bottom: 12,
+                    right: 12,
+                    opacity: codeCollapsing ? 1 : 0,
+                    transition: "opacity 300ms ease",
+                    pointerEvents: "none",
+                    fontFamily: "monospace",
+                    fontSize: "0.8rem",
+                    fontWeight: 600,
+                    color: "rgba(255,255,255,0.6)",
                   }}
                 >
-                  <SyntaxHighlight code={"// app.tsx\n" + displayCode} cursor={cursor} />
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: 12,
-                      right: 12,
-                      opacity: codeCollapsing ? 1 : 0,
-                      transition: "opacity 300ms ease",
-                      pointerEvents: "none",
-                      fontFamily: "monospace",
-                      fontSize: "0.8rem",
-                      fontWeight: 600,
-                      color: "rgba(255,255,255,0.6)",
-                    }}
-                  >
-                    {"</>"}
-                  </div>
+                  {"</>"}
                 </div>
-              </div>
-
-              <div
-                style={{ position: "relative", overflow: "visible" }}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-              >
-                {mounted && !maximized && (
-                  <div
-                    className="showcase-preview"
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: "50%",
-                      transform: codeCollapsed
-                        ? `translate(calc(-50% + ${pos.x}px), ${pos.y}px)`
-                        : `translate(calc(-50% + 24px + ${pos.x}px), ${pos.y}px)`,
-                      transition: dragRef.current
-                        ? undefined
-                        : `transform 600ms cubic-bezier(0.4, 0, 0.2, 1)`,
-                    }}
-                  >
-                    {player}
-                  </div>
-                )}
               </div>
             </div>
 
-            {mounted &&
-              maximized &&
-              createPortal(
-                <GtkProvider
-                  theme={theme}
-                  icons={adwaitaIcons}
-                  style={{ position: "fixed", inset: 0, zIndex: 9999 }}
+            <div
+              style={{ position: "relative", overflow: "visible" }}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+            >
+              {mounted && !maximized && (
+                <div
+                  className="showcase-preview"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: "50%",
+                    transform: codeCollapsed
+                      ? `translate(calc(-50% + ${pos.x}px), ${pos.y}px)`
+                      : `translate(calc(-50% + 24px + ${pos.x}px), ${pos.y}px)`,
+                    transition: dragRef.current
+                      ? undefined
+                      : `transform 600ms cubic-bezier(0.4, 0, 0.2, 1)`,
+                  }}
                 >
-                  <div
-                    className="showcase-preview"
-                    style={{ width: "100%", height: "100%" }}
-                    onPointerMove={handlePointerMove}
-                    onPointerUp={handlePointerUp}
-                  >
-                    {player}
-                  </div>
-                </GtkProvider>,
-                document.body,
+                  {player}
+                </div>
               )}
-          </AudioProvider>
+            </div>
+          </div>
+
+          {mounted &&
+            maximized &&
+            createPortal(
+              <GtkProvider
+                theme={theme}
+                icons={adwaitaIcons}
+                style={{ position: "fixed", inset: 0, zIndex: 9999 }}
+              >
+                <div
+                  className="showcase-preview"
+                  style={{ width: "100%", height: "100%" }}
+                  onPointerMove={handlePointerMove}
+                  onPointerUp={handlePointerUp}
+                >
+                  {player}
+                </div>
+              </GtkProvider>,
+              document.body,
+            )}
+        </AudioProvider>
       </div>
 
       <style>{`
