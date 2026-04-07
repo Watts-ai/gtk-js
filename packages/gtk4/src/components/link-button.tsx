@@ -26,7 +26,7 @@ export const GtkLinkButton = forwardRef<HTMLAnchorElement, GtkLinkButtonProps>(
     const [internalVisited, setInternalVisited] = useState(false);
     const visited = controlledVisited ?? internalVisited;
 
-    const classes = ["gtk-button", "link"];
+    const classes = ["gtk-button", "flat", "text-button", "link"];
     if (className) classes.push(className);
 
     const handleClick = useCallback(

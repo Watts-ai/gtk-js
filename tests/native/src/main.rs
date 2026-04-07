@@ -31,6 +31,8 @@ enum Command {
     ButtonCircular,
     ButtonPill,
     ButtonDisabled,
+    LinkDefault,
+    LinkVisited,
     ToggleTextDefault,
     ToggleTextChecked,
     ToggleTextFlat,
@@ -134,6 +136,8 @@ fn main() {
         Command::ButtonDisabled => {
             render_and_extract::<cases::button_disabled::ButtonDisabled>((), output)
         }
+        Command::LinkDefault => render_and_extract::<cases::link_default::LinkDefault>((), output),
+        Command::LinkVisited => render_and_extract::<cases::link_visited::LinkVisited>((), output),
         Command::ToggleTextDefault => {
             render_and_extract::<cases::toggle_text_default::ToggleTextDefault>((), output)
         }

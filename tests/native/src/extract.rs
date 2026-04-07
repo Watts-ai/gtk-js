@@ -154,7 +154,14 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
         RenderNodeType::ColorNode => {
             let color_node: gsk::ColorNode = node.clone().downcast().unwrap();
             if snapshot.background_color.is_none() {
-                snapshot.background_color = Some(rgba_to_color(&color_node.color()));
+                // Only treat as background if the node covers a significant area.
+                // Thin slivers (e.g. text underline decorations) should be ignored.
+                let bounds = color_node.bounds();
+                let area = bounds.width() * bounds.height();
+                let min_bg_area = snapshot.width * snapshot.height * 0.1;
+                if area >= min_bg_area {
+                    snapshot.background_color = Some(rgba_to_color(&color_node.color()));
+                }
             }
         }
 

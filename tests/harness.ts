@@ -5,7 +5,7 @@ function getPort(): number {
   return globalThis.__testServer.port;
 }
 
-interface WidgetSnapshot {
+export interface WidgetSnapshot {
   width: number;
   height: number;
   padding: Sides;
@@ -21,21 +21,21 @@ interface WidgetSnapshot {
   opacity: number;
 }
 
-interface Sides {
+export interface Sides {
   top: number;
   right: number;
   bottom: number;
   left: number;
 }
 
-interface Corners {
+export interface Corners {
   top_left: number;
   top_right: number;
   bottom_right: number;
   bottom_left: number;
 }
 
-interface Color {
+export interface Color {
   r: number;
   g: number;
   b: number;
@@ -249,7 +249,19 @@ export async function extractWebStyles(
   };
 }
 
-function colorsMatch(a: Color | null, b: Color | null, tolerance = 1 / 255): boolean {
+export const DEFAULT_COLOR_TOLERANCE = 1 / 255;
+export const DEFAULT_NUMBER_TOLERANCE = 0.5;
+
+export function normalizeTransparent(c: Color | null): Color | null {
+  if (c !== null && c.a === 0) return null;
+  return c;
+}
+
+function colorsMatch(
+  a: Color | null,
+  b: Color | null,
+  tolerance = DEFAULT_COLOR_TOLERANCE,
+): boolean {
   if (a === null && b === null) return true;
   if (a === null || b === null) return false;
   return (
@@ -260,7 +272,7 @@ function colorsMatch(a: Color | null, b: Color | null, tolerance = 1 / 255): boo
   );
 }
 
-function numbersMatch(a: number, b: number, tolerance = 0.5): boolean {
+function numbersMatch(a: number, b: number, tolerance = DEFAULT_NUMBER_TOLERANCE): boolean {
   return Math.abs(a - b) <= tolerance;
 }
 
@@ -315,11 +327,6 @@ export function compare(native: WidgetSnapshot, web: WidgetSnapshot): CompareRes
     }
   }
 
-  // null and rgba(0,0,0,0) are both "transparent"
-  function normalizeTransparent(c: Color | null): Color | null {
-    if (c !== null && c.a === 0) return null;
-    return c;
-  }
   checkColor(
     "background_color",
     normalizeTransparent(native.background_color),
@@ -349,7 +356,9 @@ export function compare(native: WidgetSnapshot, web: WidgetSnapshot): CompareRes
   return { failures };
 }
 
-export function gtkTest(caseName: string) {
+export type GtkTestCallback = (native: WidgetSnapshot, web: WidgetSnapshot) => void;
+
+export function gtkTest(caseName: string, cb?: GtkTestCallback) {
   const browsers = globalThis.__testBrowsers;
   for (const [browserName, browser] of Object.entries(browsers)) {
     test(`${caseName} (${browserName})`, async () => {
@@ -357,11 +366,21 @@ export function gtkTest(caseName: string) {
         getNativeSnapshot(caseName),
         extractWebStyles(browser, caseName),
       ]);
-      const result = compare(native, web);
-      if (result.failures.length > 0) {
-        console.error("Failures:", JSON.stringify(result.failures, null, 2));
+      try {
+        if (cb) {
+          cb(native, web);
+        } else {
+          const result = compare(native, web);
+          if (result.failures.length > 0) {
+            console.error("Failures:", JSON.stringify(result.failures, null, 2));
+          }
+          expect(result.failures).toEqual([]);
+        }
+      } catch (err) {
+        console.error("Native:", JSON.stringify(native, null, 2));
+        console.error("Web:", JSON.stringify(web, null, 2));
+        throw err;
       }
-      expect(result.failures).toEqual([]);
     });
   }
 }

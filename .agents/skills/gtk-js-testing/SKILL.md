@@ -9,89 +9,58 @@ Tests live in `tests/` and compare native GTK4/Adwaita rendering (Rust/relm4) ag
 
 ## Running tests
 
-- `bun test` — run all tests
-- `bun test <filter>` — run tests matching substring (e.g. `bun test toggle`, `bun test button`)
+- `bun test` — run all tests (e2e + unit)
+- `bun test <filter>` — run tests matching substring (e.g. `bun test toggle`, `bun test link`)
+- `bun test packages/gtk-css` — run CSS transform unit tests only
 - Tests run against both Chromium and Firefox (2 tests per case)
 
 ## Adding a new test case
 
-Three places need changes for each case:
+Three places need changes for each case. **Read the existing files to discover current patterns, available helpers, types, and naming conventions** — don't rely solely on this doc:
 
 ### 1. Native side (`tests/native/src/cases/`)
 
-Create a Rust file with a `SimpleComponent` rendering the widget via relm4:
-
-```rust
-use gtk::prelude::*;
-use relm4::prelude::*;
-
-pub struct ToggleTextDefault;
-
-#[relm4::component(pub)]
-impl SimpleComponent for ToggleTextDefault {
-    type Init = ();
-    type Input = ();
-    type Output = ();
-
-    view! {
-        gtk::ToggleButton {
-            set_label: "Toggle",
-        }
-    }
-
-    fn init(_: (), root: Self::Root, _sender: ComponentSender<Self>) -> ComponentParts<Self> {
-        let model = Self;
-        let widgets = view_output!();
-        ComponentParts { model, widgets }
-    }
-}
-```
-
-Then register it:
+Create a Rust file with a `SimpleComponent` rendering the widget via relm4. Read existing cases in this directory for the exact pattern, then register it:
 - Add `pub mod <case_name>;` in `tests/native/src/cases/mod.rs`
 - Add a `Command` enum variant and match arm in `tests/native/src/main.rs`
 
 ### 2. Web side (`tests/client.tsx`)
 
-Add a case entry mapping the kebab-case name to a React element with `data-testid="target"`:
-
-```tsx
-"toggle-text-default": () => <GtkToggleButton label="Toggle" data-testid="target" />,
-```
-
-Import any new components from `@gtk-js/adwaita` at the top of the file.
+Add a case entry mapping the kebab-case name to a React element with `data-testid="target"`. Read `tests/client.tsx` for the import and case map pattern.
 
 ### 3. Test file (`tests/cases/`)
 
-Create `<case-name>.test.ts`:
+Create `<case-name>.test.ts`. For the simplest case:
 
 ```ts
 import { gtkTest } from "../harness";
 
-gtkTest("toggle-text-default");
+gtkTest("case-name");
 ```
 
-Use `gtkTestExpectFailure("<case-name>", ["prop"])` for intentional-failure sanity checks.
+For tests needing custom assertions (e.g. relaxed tolerances), `gtkTest` accepts an optional callback with strongly typed `(native, web)` snapshots. Read `tests/harness.ts` for the `WidgetSnapshot` type and `gtkTest` signature, and `tests/assert.ts` for available assertion helpers (`gtkAssert`).
 
-## What gets compared
+On failure, the harness always dumps full native and web JSON snapshots to stderr.
 
-The harness compares these properties (with tolerances):
+## Key files to read
 
-| Property | Tolerance |
-|----------|-----------|
-| `padding` (4 sides) | 0.5px |
-| `border_radius` (4 corners) | 0.5px, clamped to min(w,h)/2 |
-| `background_color` | 1/255 per channel |
-| `border_widths` (4 sides) | 0.5px |
-| `border_colors` (4 sides) | 1/255 per channel |
-| `color` (text) | 1/255 per channel |
-| `font_family` | normalized (Adwaita Sans = Cantarell) |
-| `font_weight` | 0.5 |
-| `opacity` | 0.5 |
+Before adding or modifying tests, read these to understand current state:
+
+| File | What to look for |
+|------|-----------------|
+| `tests/harness.ts` | `WidgetSnapshot` type, `compare()` tolerances, `gtkTest` / `gtkTestExpectFailure` signatures |
+| `tests/assert.ts` | `gtkAssert` helpers for custom test callbacks |
+| `tests/client.tsx` | Case map and component imports |
+| `tests/native/src/main.rs` | Command enum and match arms |
+| `tests/native/src/cases/mod.rs` | Module list |
+| `tests/native/src/cases/*.rs` | Existing case patterns |
+| `tests/cases/*.test.ts` | Existing test patterns (simple and custom) |
+| `packages/gtk-css/src/transform.test.ts` | CSS transform pipeline unit tests |
+
+## Unit tests
+
+`packages/gtk-css/` has its own `bunfig.toml` so unit tests there run without the Playwright/cargo preload. Add CSS transform regression tests in `packages/gtk-css/src/transform.test.ts`.
 
 ## Naming conventions
 
-- Case names are kebab-case: `toggle-text-default`, `button-icon`
-- Rust module names are snake_case: `toggle_text_default`, `button_icon`
-- Rust struct names are PascalCase: `ToggleTextDefault`, `ButtonIcon`
-- CLI subcommands are PascalCase matching the struct: `ToggleTextDefault`
+Read `tests/native/src/cases/mod.rs` and `tests/client.tsx` to derive the kebab-case ↔ snake_case ↔ PascalCase mapping from existing cases.

@@ -48,3 +48,6 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # Rust build artifacts
 tests/native/target/
+
+# Native test runner temp files
+tests/.native-output-*.json

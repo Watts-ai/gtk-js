@@ -201,6 +201,9 @@ const remapPseudoClasses: Plugin = {
     // :checked → [data-checked] (GTK uses checked state for toggles/spinners)
     sel = sel.replace(/:checked/g, "[data-checked]");
 
+    // :visited → [data-visited] (browsers restrict :visited styling; use data attribute)
+    sel = sel.replace(/:visited/g, "[data-visited]");
+
     if (sel !== rule.selector) {
       rule.selector = sel;
     }

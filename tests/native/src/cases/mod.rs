@@ -6,6 +6,8 @@ pub mod button_text_default;
 pub mod button_text_destructive;
 pub mod button_text_flat;
 pub mod button_text_suggested;
+pub mod link_default;
+pub mod link_visited;
 pub mod toggle_disabled;
 pub mod toggle_text_checked;
 pub mod toggle_text_default;
