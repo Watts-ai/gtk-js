@@ -7,6 +7,7 @@ Bringing the GTK4/Adwaita ecosystem to the web via React.
 Default to using Bun instead of Node.js.
 
 - Use `bun <file>`, `bun test`, `bun install`, `bun run <script>`
+- Run `bun run check` (biome lint + tsc) and `bun run fix` (biome auto-fix) before committing.
 - Use `Bun.serve()` with HTML imports for dev servers. Don't use vite.
 - Bun's HMR does NOT detect changes to files imported with `{ type: "text" }`. The server must be fully restarted when modifying `.css` files imported this way.
 
