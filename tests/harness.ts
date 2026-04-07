@@ -141,19 +141,10 @@ export function getNativeSnapshot(caseName: string): Promise<WidgetSnapshot> {
   if (cached) return cached;
 
   const promise = (async () => {
-    const proc = Bun.spawn(
-      [
-        "xvfb-run",
-        "-a",
-        "cargo",
-        "run",
-        "--manifest-path",
-        "tests/native/Cargo.toml",
-        "--",
-        caseName,
-      ],
-      { stdout: "pipe", stderr: "pipe" },
-    );
+    const proc = Bun.spawn(["xvfb-run", "-a", "tests/native/target/debug/gtk-js-test", caseName], {
+      stdout: "pipe",
+      stderr: "pipe",
+    });
 
     const output = await new Response(proc.stdout).text();
     const exitCode = await proc.exited;

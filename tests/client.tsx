@@ -21,9 +21,7 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // GtkToggleButton cases
   "toggle-text-default": () => <GtkToggleButton label="Toggle" data-testid="target" />,
-  "toggle-text-checked": () => (
-    <GtkToggleButton label="Toggle" active data-testid="target" />
-  ),
+  "toggle-text-checked": () => <GtkToggleButton label="Toggle" active data-testid="target" />,
   "toggle-text-flat": () => (
     <GtkToggleButton label="Toggle" hasFrame={false} data-testid="target" />
   ),
