@@ -25,6 +25,10 @@ enum Command {
     ButtonCircular,
     ButtonPill,
     ButtonDisabled,
+    ToggleTextDefault,
+    ToggleTextChecked,
+    ToggleTextFlat,
+    ToggleDisabled,
 }
 
 fn render_and_extract<C>(init: C::Init)
@@ -118,5 +122,17 @@ fn main() {
         Command::ButtonCircular => render_and_extract::<cases::button_circular::ButtonCircular>(()),
         Command::ButtonPill => render_and_extract::<cases::button_pill::ButtonPill>(()),
         Command::ButtonDisabled => render_and_extract::<cases::button_disabled::ButtonDisabled>(()),
+        Command::ToggleTextDefault => {
+            render_and_extract::<cases::toggle_text_default::ToggleTextDefault>(())
+        }
+        Command::ToggleTextChecked => {
+            render_and_extract::<cases::toggle_text_checked::ToggleTextChecked>(())
+        }
+        Command::ToggleTextFlat => {
+            render_and_extract::<cases::toggle_text_flat::ToggleTextFlat>(())
+        }
+        Command::ToggleDisabled => {
+            render_and_extract::<cases::toggle_disabled::ToggleDisabled>(())
+        }
     }
 }
