@@ -144,7 +144,7 @@ export function getNativeSnapshot(caseName: string): Promise<WidgetSnapshot> {
     const tmpFile = `${import.meta.dir}/.native-output-${caseName}-${Date.now()}.json`;
     const proc = Bun.spawn(
       ["xvfb-run", "-a", "tests/native/target/debug/gtk-js-test", "--output", tmpFile, caseName],
-      { stdout: "inherit", stderr: "pipe" },
+      { stdout: "pipe", stderr: "pipe" },
     );
 
     const exitCode = await proc.exited;
