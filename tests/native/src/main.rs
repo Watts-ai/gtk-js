@@ -33,6 +33,11 @@ enum Command {
     ButtonDisabled,
     LinkDefault,
     LinkVisited,
+    MenuButtonTextDefault,
+    MenuButtonIcon,
+    MenuButtonFlat,
+    MenuButtonCircular,
+    MenuButtonDisabled,
     ToggleTextDefault,
     ToggleTextChecked,
     ToggleTextFlat,
@@ -138,6 +143,21 @@ fn main() {
         }
         Command::LinkDefault => render_and_extract::<cases::link_default::LinkDefault>((), output),
         Command::LinkVisited => render_and_extract::<cases::link_visited::LinkVisited>((), output),
+        Command::MenuButtonTextDefault => {
+            render_and_extract::<cases::menu_button_text_default::MenuButtonTextDefault>((), output)
+        }
+        Command::MenuButtonIcon => {
+            render_and_extract::<cases::menu_button_icon::MenuButtonIcon>((), output)
+        }
+        Command::MenuButtonFlat => {
+            render_and_extract::<cases::menu_button_flat::MenuButtonFlat>((), output)
+        }
+        Command::MenuButtonCircular => {
+            render_and_extract::<cases::menu_button_circular::MenuButtonCircular>((), output)
+        }
+        Command::MenuButtonDisabled => {
+            render_and_extract::<cases::menu_button_disabled::MenuButtonDisabled>((), output)
+        }
         Command::ToggleTextDefault => {
             render_and_extract::<cases::toggle_text_default::ToggleTextDefault>((), output)
         }
