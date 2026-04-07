@@ -13,6 +13,7 @@ pub mod menu_button_disabled;
 pub mod menu_button_flat;
 pub mod menu_button_icon;
 pub mod menu_button_text_default;
+pub mod search_bar_default;
 pub mod toggle_disabled;
 pub mod toggle_text_checked;
 pub mod toggle_text_default;

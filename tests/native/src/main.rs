@@ -42,6 +42,7 @@ enum Command {
     ToggleTextChecked,
     ToggleTextFlat,
     ToggleDisabled,
+    SearchBarDefault,
 }
 
 /// Like [`render_and_extract`] but snapshots and extracts from the widget's first child
@@ -92,6 +93,85 @@ where
             let inner = widget
                 .first_child()
                 .expect("render_and_extract_inner: widget has no first child");
+
+            let inner_width = inner.width();
+            let inner_height = inner.height();
+
+            if inner_width <= 0 || inner_height <= 0 {
+                eprintln!("Inner widget has zero size, layout may not have completed");
+                std::process::exit(1);
+            }
+
+            let paintable = gtk::WidgetPaintable::new(Some(&inner));
+            let snapshot = gtk::Snapshot::new();
+            paintable.snapshot(&snapshot, inner_width as f64, inner_height as f64);
+
+            if let Some(node) = snapshot.to_node() {
+                let result = extract::extract_with_widget(&node, &inner);
+                let json =
+                    serde_json::to_string_pretty(&result).expect("Failed to serialize snapshot");
+                if let Some(ref path) = output {
+                    std::fs::write(path, &json).expect("Failed to write output file");
+                } else {
+                    println!("{json}");
+                }
+            } else {
+                eprintln!("No render node produced");
+                std::process::exit(1);
+            }
+
+            window.close();
+            std::process::exit(0);
+        });
+    });
+
+    app.run_with_args::<&str>(&[]);
+}
+
+fn render_and_extract_inner_inner<C>(init: C::Init, output: Option<PathBuf>)
+where
+    C: SimpleComponent,
+    C::Root: IsA<gtk::Widget>,
+    C::Init: Copy,
+{
+    // Set environment before GTK init for deterministic rendering
+    unsafe {
+        std::env::set_var("GDK_SCALE", "1");
+    }
+
+    let app = adw::Application::builder()
+        .application_id("org.gtkjs.test")
+        .build();
+
+    app.connect_activate(move |app| {
+        let output = output.clone();
+        let settings = gtk::Settings::default().expect("Failed to get GtkSettings");
+        settings.set_gtk_font_name(Some("Cantarell 11"));
+        // Force Adwaita style manager to light mode
+        let style_manager = adw::StyleManager::default();
+        style_manager.set_color_scheme(adw::ColorScheme::ForceLight);
+
+        let window = adw::Window::builder()
+            .application(app)
+            .decorated(false)
+            .default_width(200)
+            .default_height(100)
+            .build();
+
+        let component = C::builder().launch(init).detach();
+
+        let widget = component.widget().clone();
+        window.set_content(Some(&widget));
+        window.present();
+
+        gtk::glib::idle_add_local_once(move || {
+            let first = widget
+                .first_child()
+                .expect("render_and_extract_inner_inner: widget has no first child");
+
+            let inner = first
+                .first_child()
+                .expect("render_and_extract_inner_inner: first child has no child");
 
             let inner_width = inner.width();
             let inner_height = inner.height();
@@ -254,6 +334,11 @@ fn main() {
         }
         Command::ToggleDisabled => {
             render_and_extract::<cases::toggle_disabled::ToggleDisabled>((), output)
+        }
+        Command::SearchBarDefault => {
+            render_and_extract_inner_inner::<cases::search_bar_default::SearchBarDefault>(
+                (), output,
+            )
         }
     }
 }

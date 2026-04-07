@@ -3,6 +3,7 @@ import {
   GtkButton,
   GtkLinkButton,
   GtkMenuButton,
+  GtkSearchBar,
   GtkToggleButton,
 } from "@gtk-js/adwaita";
 import { createRoot } from "react-dom/client";
@@ -46,6 +47,9 @@ const cases: Record<string, () => React.ReactElement> = {
     <GtkToggleButton label="Toggle" hasFrame={false} data-testid="target" />
   ),
   "toggle-disabled": () => <GtkToggleButton label="Toggle" disabled data-testid="target" />,
+
+  // GtkSearchBar cases
+  "search-bar-default": () => <GtkSearchBar searchModeEnabled data-testid="target" />,
 
   // Expected-failure cases: intentionally broken for testing the comparison
   "button-text-default-wrong-padding": () => (

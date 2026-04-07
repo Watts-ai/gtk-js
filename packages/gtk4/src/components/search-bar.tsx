@@ -51,7 +51,7 @@ export const GtkSearchBar = forwardRef<HTMLDivElement, GtkSearchBarProps>(functi
   return (
     <div ref={ref} className={classes.join(" ")} role="search" {...rest}>
       <div className="gtk-revealer">
-        <div className="gtk-box gtk-box-layout horizontal" style={{ gap: 6 }}>
+        <div className="gtk-box gtk-center-layout horizontal">
           {child}
           {showCloseButton && (
             <button type="button" className="gtk-button flat close" onClick={handleClose}>
