@@ -144,7 +144,7 @@ export function getNativeSnapshot(caseName: string): Promise<WidgetSnapshot> {
     const tmpFile = `${import.meta.dir}/.native-output-${caseName}-${Date.now()}.json`;
     const proc = Bun.spawn(
       ["xvfb-run", "-a", "tests/native/target/debug/gtk-js-test", "--output", tmpFile, caseName],
-      { stdout: "pipe", stderr: "pipe" },
+      { stdout: "ignore", stderr: "pipe" },
     );
 
     const exitCode = await proc.exited;
@@ -161,9 +161,12 @@ export function getNativeSnapshot(caseName: string): Promise<WidgetSnapshot> {
     }
 
     const file = Bun.file(tmpFile);
-    const output = await file.text();
-    await file.unlink();
-    return JSON.parse(output);
+    try {
+      const output = await file.text();
+      return JSON.parse(output);
+    } finally {
+      await file.unlink();
+    }
   })();
 
   nativeSnapshotCache.set(caseName, promise);
