@@ -6,6 +6,8 @@ pub mod button_text_default;
 pub mod button_text_destructive;
 pub mod button_text_flat;
 pub mod button_text_suggested;
+pub mod entry_row_default;
+pub mod entry_row_disabled;
 pub mod link_default;
 pub mod link_visited;
 pub mod menu_button_circular;

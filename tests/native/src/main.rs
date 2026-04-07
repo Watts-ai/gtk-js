@@ -31,6 +31,8 @@ enum Command {
     ButtonCircular,
     ButtonPill,
     ButtonDisabled,
+    EntryRowDefault,
+    EntryRowDisabled,
     LinkDefault,
     LinkVisited,
     MenuButtonTextDefault,
@@ -223,6 +225,12 @@ fn main() {
         Command::ButtonPill => render_and_extract::<cases::button_pill::ButtonPill>((), output),
         Command::ButtonDisabled => {
             render_and_extract::<cases::button_disabled::ButtonDisabled>((), output)
+        }
+        Command::EntryRowDefault => {
+            render_and_extract::<cases::entry_row_default::EntryRowDefault>((), output)
+        }
+        Command::EntryRowDisabled => {
+            render_and_extract::<cases::entry_row_disabled::EntryRowDisabled>((), output)
         }
         Command::LinkDefault => render_and_extract::<cases::link_default::LinkDefault>((), output),
         Command::LinkVisited => render_and_extract::<cases::link_visited::LinkVisited>((), output),

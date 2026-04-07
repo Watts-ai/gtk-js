@@ -1,5 +1,6 @@
 import {
   AdwaitaProvider,
+  AdwEntryRow,
   GtkButton,
   GtkLinkButton,
   GtkMenuButton,
@@ -46,6 +47,10 @@ const cases: Record<string, () => React.ReactElement> = {
     <GtkToggleButton label="Toggle" hasFrame={false} data-testid="target" />
   ),
   "toggle-disabled": () => <GtkToggleButton label="Toggle" disabled data-testid="target" />,
+
+  // AdwEntryRow cases
+  "entry-row-default": () => <AdwEntryRow title="Title" data-testid="target" />,
+  "entry-row-disabled": () => <AdwEntryRow title="Title" disabled data-testid="target" />,
 
   // Expected-failure cases: intentionally broken for testing the comparison
   "button-text-default-wrong-padding": () => (
