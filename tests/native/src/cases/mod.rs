@@ -1,4 +1,8 @@
 pub mod button_circular;
+pub mod check_button_disabled;
+pub mod check_button_no_label;
+pub mod check_button_text_checked;
+pub mod check_button_text_default;
 pub mod button_disabled;
 pub mod button_icon;
 pub mod button_pill;

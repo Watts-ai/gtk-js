@@ -25,6 +25,10 @@ struct Cli {
 enum Command {
     ButtonTextDefault,
     ButtonTextFlat,
+    CheckButtonTextDefault,
+    CheckButtonTextChecked,
+    CheckButtonDisabled,
+    CheckButtonNoLabel,
     ButtonTextSuggested,
     ButtonTextDestructive,
     ButtonIcon,
@@ -254,6 +258,22 @@ fn main() {
         }
         Command::ToggleDisabled => {
             render_and_extract::<cases::toggle_disabled::ToggleDisabled>((), output)
+        }
+        Command::CheckButtonTextDefault => {
+            render_and_extract::<cases::check_button_text_default::CheckButtonTextDefault>(
+                (), output,
+            )
+        }
+        Command::CheckButtonTextChecked => {
+            render_and_extract_inner::<cases::check_button_text_checked::CheckButtonTextChecked>(
+                (), output,
+            )
+        }
+        Command::CheckButtonDisabled => {
+            render_and_extract::<cases::check_button_disabled::CheckButtonDisabled>((), output)
+        }
+        Command::CheckButtonNoLabel => {
+            render_and_extract::<cases::check_button_no_label::CheckButtonNoLabel>((), output)
         }
     }
 }

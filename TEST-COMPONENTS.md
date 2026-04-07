@@ -27,7 +27,11 @@ Structural regression tests comparing native GTK4/Adwaita rendering against web 
   - [x] flat
   - [x] circular
   - [x] disabled
-- [ ] GtkCheckButton
+- [x] GtkCheckButton
+  - [x] text-default
+  - [x] text-checked
+  - [x] disabled
+  - [x] no-label
 - [ ] GtkSwitch
 - [ ] GtkLabel
 - [ ] GtkImage

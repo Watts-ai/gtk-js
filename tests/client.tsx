@@ -1,6 +1,7 @@
 import {
   AdwaitaProvider,
   GtkButton,
+  GtkCheckButton,
   GtkLinkButton,
   GtkMenuButton,
   GtkToggleButton,
@@ -46,6 +47,12 @@ const cases: Record<string, () => React.ReactElement> = {
     <GtkToggleButton label="Toggle" hasFrame={false} data-testid="target" />
   ),
   "toggle-disabled": () => <GtkToggleButton label="Toggle" disabled data-testid="target" />,
+
+  // GtkCheckButton cases
+  "check-button-text-default": () => <GtkCheckButton label="Check" data-testid="target" />,
+  "check-button-text-checked": () => <GtkCheckButton label="Check" active data-testid="target" />,
+  "check-button-disabled": () => <GtkCheckButton label="Check" disabled data-testid="target" />,
+  "check-button-no-label": () => <GtkCheckButton data-testid="target" />,
 
   // Expected-failure cases: intentionally broken for testing the comparison
   "button-text-default-wrong-padding": () => (
