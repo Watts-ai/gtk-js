@@ -42,6 +42,7 @@ enum Command {
     ToggleTextChecked,
     ToggleTextFlat,
     ToggleDisabled,
+    OverlayDefault,
 }
 
 /// Like [`render_and_extract`] but snapshots and extracts from the widget's first child
@@ -254,6 +255,9 @@ fn main() {
         }
         Command::ToggleDisabled => {
             render_and_extract::<cases::toggle_disabled::ToggleDisabled>((), output)
+        }
+        Command::OverlayDefault => {
+            render_and_extract::<cases::overlay_default::OverlayDefault>((), output)
         }
     }
 }

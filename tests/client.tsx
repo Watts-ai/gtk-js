@@ -1,8 +1,10 @@
 import {
   AdwaitaProvider,
   GtkButton,
+  GtkLabel,
   GtkLinkButton,
   GtkMenuButton,
+  GtkOverlay,
   GtkToggleButton,
 } from "@gtk-js/adwaita";
 import { createRoot } from "react-dom/client";
@@ -46,6 +48,9 @@ const cases: Record<string, () => React.ReactElement> = {
     <GtkToggleButton label="Toggle" hasFrame={false} data-testid="target" />
   ),
   "toggle-disabled": () => <GtkToggleButton label="Toggle" disabled data-testid="target" />,
+
+  // GtkOverlay cases
+  "overlay-default": () => <GtkOverlay child={<GtkLabel label="Content" />} data-testid="target" />,
 
   // Expected-failure cases: intentionally broken for testing the comparison
   "button-text-default-wrong-padding": () => (

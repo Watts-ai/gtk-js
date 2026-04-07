@@ -49,7 +49,8 @@ Structural regression tests comparing native GTK4/Adwaita rendering against web 
 - [ ] GtkPaned
 - [ ] GtkStack
 - [ ] GtkNotebook
-- [ ] GtkOverlay
+- [x] GtkOverlay
+  - [x] default
 - [ ] GtkFrame
 - [ ] GtkExpander
 - [ ] GtkSeparator
