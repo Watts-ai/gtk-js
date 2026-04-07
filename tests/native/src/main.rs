@@ -58,6 +58,7 @@ where
     C::Root: IsA<gtk::Widget>,
     C::Init: Copy,
 {
+    // Set environment before GTK init for deterministic rendering
     unsafe {
         std::env::set_var("GDK_SCALE", "1");
     }
@@ -70,6 +71,7 @@ where
         let output = output.clone();
         let settings = gtk::Settings::default().expect("Failed to get GtkSettings");
         settings.set_gtk_font_name(Some("Cantarell 11"));
+        // Force Adwaita style manager to light mode
         let style_manager = adw::StyleManager::default();
         style_manager.set_color_scheme(adw::ColorScheme::ForceLight);
 
