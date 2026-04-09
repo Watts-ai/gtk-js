@@ -2,7 +2,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { Server } from "bun";
-import { type Browser, type Page, chromium, firefox } from "playwright";
+import { type Browser, chromium, firefox, type Page } from "playwright";
 import { startTestServer } from "./server";
 
 declare global {

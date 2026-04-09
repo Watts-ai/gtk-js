@@ -1,10 +1,6 @@
 import { expect, test } from "bun:test";
 import type { Browser } from "playwright";
 
-function getPort(): number {
-  return globalThis.__testServer.port;
-}
-
 function debugEnabled(): boolean {
   return Bun.env.GTK_JS_TEST_DEBUG != null;
 }
@@ -165,9 +161,7 @@ export function getNativeSnapshot(caseName: string): Promise<WidgetSnapshot> {
 
     if (!response.ok) {
       const body = await response.text();
-      throw new Error(
-        `Native snapshot failed for ${caseName} (HTTP ${response.status}):\n${body}`,
-      );
+      throw new Error(`Native snapshot failed for ${caseName} (HTTP ${response.status}):\n${body}`);
     }
 
     debugLog("native", `fetch complete case=${caseName}`);
@@ -384,49 +378,57 @@ export function gtkTest(
   const callback = typeof cbOrOpts === "function" ? cbOrOpts : cb;
   const browsers = globalThis.__testBrowsers;
   for (const [browserName, browser] of Object.entries(browsers)) {
-    test.concurrent(`${caseName} (${browserName})`, async () => {
-      debugLog("test", `start case=${caseName} browser=${browserName}`);
-      const [native, web] = await Promise.all([
-        getNativeSnapshot(caseName),
-        extractWebStyles(browser, caseName, opts?.childSelector),
-      ]);
-      try {
-        if (callback) {
-          callback(native, web);
-        } else {
-          const result = compare(native, web);
-          if (result.failures.length > 0) {
-            console.error("Failures:", JSON.stringify(result.failures, null, 2));
+    test.concurrent(
+      `${caseName} (${browserName})`,
+      async () => {
+        debugLog("test", `start case=${caseName} browser=${browserName}`);
+        const [native, web] = await Promise.all([
+          getNativeSnapshot(caseName),
+          extractWebStyles(browser, caseName, opts?.childSelector),
+        ]);
+        try {
+          if (callback) {
+            callback(native, web);
+          } else {
+            const result = compare(native, web);
+            if (result.failures.length > 0) {
+              console.error("Failures:", JSON.stringify(result.failures, null, 2));
+            }
+            expect(result.failures).toEqual([]);
           }
-          expect(result.failures).toEqual([]);
+        } catch (err) {
+          console.error("Native:", JSON.stringify(native, null, 2));
+          console.error("Web:", JSON.stringify(web, null, 2));
+          throw err;
+        } finally {
+          debugLog("test", `end case=${caseName} browser=${browserName}`);
         }
-      } catch (err) {
-        console.error("Native:", JSON.stringify(native, null, 2));
-        console.error("Web:", JSON.stringify(web, null, 2));
-        throw err;
-      } finally {
-        debugLog("test", `end case=${caseName} browser=${browserName}`);
-      }
-    }, GTK_TEST_TIMEOUT);
+      },
+      GTK_TEST_TIMEOUT,
+    );
   }
 }
 
 export function gtkTestExpectFailure(caseName: string, expectedFailProperties: string[]) {
   const browsers = globalThis.__testBrowsers;
   for (const [browserName, browser] of Object.entries(browsers)) {
-    test.concurrent(`${caseName} (${browserName}) [expected failure]`, async () => {
-      debugLog("test", `start case=${caseName} browser=${browserName} expected-failure`);
-      const nativeCaseName = caseName.replace(/-wrong-.*$/, "");
-      const [native, web] = await Promise.all([
-        getNativeSnapshot(nativeCaseName),
-        extractWebStyles(browser, caseName),
-      ]);
-      const result = compare(native, web);
-      expect(result.failures.length).toBeGreaterThan(0);
-      for (const prop of expectedFailProperties) {
-        expect(result.failures.some((f) => f.property.startsWith(prop))).toBe(true);
-      }
-      debugLog("test", `end case=${caseName} browser=${browserName} expected-failure`);
-    }, GTK_TEST_TIMEOUT);
+    test.concurrent(
+      `${caseName} (${browserName}) [expected failure]`,
+      async () => {
+        debugLog("test", `start case=${caseName} browser=${browserName} expected-failure`);
+        const nativeCaseName = caseName.replace(/-wrong-.*$/, "");
+        const [native, web] = await Promise.all([
+          getNativeSnapshot(nativeCaseName),
+          extractWebStyles(browser, caseName),
+        ]);
+        const result = compare(native, web);
+        expect(result.failures.length).toBeGreaterThan(0);
+        for (const prop of expectedFailProperties) {
+          expect(result.failures.some((f) => f.property.startsWith(prop))).toBe(true);
+        }
+        debugLog("test", `end case=${caseName} browser=${browserName} expected-failure`);
+      },
+      GTK_TEST_TIMEOUT,
+    );
   }
 }

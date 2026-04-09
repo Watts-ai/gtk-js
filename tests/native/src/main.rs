@@ -151,6 +151,31 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
     }
 }
 
+fn is_known_case(name: &str) -> bool {
+    matches!(
+        name,
+        "button-text-default"
+            | "button-text-flat"
+            | "button-text-suggested"
+            | "button-text-destructive"
+            | "button-icon"
+            | "button-circular"
+            | "button-pill"
+            | "button-disabled"
+            | "link-default"
+            | "link-visited"
+            | "menu-button-text-default"
+            | "menu-button-icon"
+            | "menu-button-flat"
+            | "menu-button-circular"
+            | "menu-button-disabled"
+            | "toggle-text-default"
+            | "toggle-text-checked"
+            | "toggle-text-flat"
+            | "toggle-disabled"
+    )
+}
+
 fn configure_environment() {
     unsafe {
         std::env::set_var("GDK_SCALE", "1");
@@ -286,6 +311,10 @@ async fn snapshot_handler(
         ));
     }
 
+    if !is_known_case(&case_name) {
+        return Err((StatusCode::NOT_FOUND, format!("Unknown case: {case_name}")));
+    }
+
     let (response_tx, response_rx) = mpsc::sync_channel(1);
     state
         .sender
@@ -300,8 +329,15 @@ async fn snapshot_handler(
             )
         })?;
 
-    tokio::task::spawn_blocking(move || response_rx.recv())
+    let response = tokio::task::spawn_blocking(move || response_rx.recv());
+    tokio::time::timeout(Duration::from_secs(10), response)
         .await
+        .map_err(|_| {
+            (
+                StatusCode::GATEWAY_TIMEOUT,
+                "GTK render timed out".to_string(),
+            )
+        })?
         .map_err(|err| (StatusCode::INTERNAL_SERVER_ERROR, err.to_string()))?
         .map_err(|_| {
             (
