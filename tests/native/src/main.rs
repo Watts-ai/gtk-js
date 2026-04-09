@@ -45,6 +45,37 @@ enum Command {
     ButtonCircular,
     ButtonPill,
     ButtonDisabled,
+    CheckButtonDefault,
+    CheckButtonChecked,
+    CheckButtonIndeterminate,
+    CheckButtonDisabled,
+    CheckButtonCheckedDisabled,
+    CheckButtonNoLabel,
+    EditableLabelDisplayDefault,
+    EditableLabelDisplayEmpty,
+    EditableLabelEditingActive,
+    EditableLabelDisabled,
+    ImageDefault,
+    ImageNormalIcons,
+    ImageLargeIcons,
+    #[clap(name = "image-pixel-size-24")]
+    ImagePixelSize24,
+    ImageNoIconName,
+    LabelDefault,
+    LabelWrapWord,
+    LabelWrapChar,
+    LabelEllipsize,
+    LabelJustifyCenter,
+    LabelWidthChars,
+    LabelXalign,
+    LabelDisabled,
+    LevelbarContinuousDefault,
+    LevelbarContinuousLow,
+    LevelbarContinuousFull,
+    LevelbarContinuousVertical,
+    LevelbarDiscreteDefault,
+    LevelbarDiscreteInverted,
+    LevelbarDisabled,
     LinkDefault,
     LinkVisited,
     MenuButtonTextDefault,
@@ -52,10 +83,42 @@ enum Command {
     MenuButtonFlat,
     MenuButtonCircular,
     MenuButtonDisabled,
+    #[clap(name = "progressbar-horizontal-50")]
+    ProgressbarHorizontal50,
+    #[clap(name = "progressbar-horizontal-0")]
+    ProgressbarHorizontal0,
+    #[clap(name = "progressbar-horizontal-100")]
+    ProgressbarHorizontal100,
+    #[clap(name = "progressbar-vertical-50")]
+    ProgressbarVertical50,
+    #[clap(name = "progressbar-inverted-50")]
+    ProgressbarInverted50,
+    ProgressbarTextCustom,
+    ProgressbarOsdHorizontal,
+    ProgressbarFractionSmall,
+    RadioButtonDefault,
+    RadioButtonChecked,
+    SeparatorHorizontalDefault,
+    SeparatorVertical,
+    SeparatorSpacerHorizontal,
+    SpinnerDefault,
+    SpinnerSpinning,
+    SpinnerSpinningCustomSize,
+    SpinnerDisabledNotSpinning,
+    SpinnerDisabledSpinning,
+    SwitchOffDefault,
+    SwitchOnDefault,
+    SwitchOffDisabled,
+    SwitchOnDisabled,
     ToggleTextDefault,
     ToggleTextChecked,
     ToggleTextFlat,
     ToggleDisabled,
+    WindowTitleTextDefault,
+    WindowTitleWithSubtitle,
+    WindowTitleLongText,
+    WindowTitleNoSubtitle,
+    WindowTitleBothEmpty,
 }
 
 struct NativeRequest {
@@ -101,6 +164,36 @@ impl Command {
             Self::ButtonCircular => Some("button-circular"),
             Self::ButtonPill => Some("button-pill"),
             Self::ButtonDisabled => Some("button-disabled"),
+            Self::CheckButtonDefault => Some("check-button-default"),
+            Self::CheckButtonChecked => Some("check-button-checked"),
+            Self::CheckButtonIndeterminate => Some("check-button-indeterminate"),
+            Self::CheckButtonDisabled => Some("check-button-disabled"),
+            Self::CheckButtonCheckedDisabled => Some("check-button-checked-disabled"),
+            Self::CheckButtonNoLabel => Some("check-button-no-label"),
+            Self::EditableLabelDisplayDefault => Some("editable-label-display-default"),
+            Self::EditableLabelDisplayEmpty => Some("editable-label-display-empty"),
+            Self::EditableLabelEditingActive => Some("editable-label-editing-active"),
+            Self::EditableLabelDisabled => Some("editable-label-disabled"),
+            Self::ImageDefault => Some("image-default"),
+            Self::ImageNormalIcons => Some("image-normal-icons"),
+            Self::ImageLargeIcons => Some("image-large-icons"),
+            Self::ImagePixelSize24 => Some("image-pixel-size-24"),
+            Self::ImageNoIconName => Some("image-no-icon-name"),
+            Self::LabelDefault => Some("label-default"),
+            Self::LabelWrapWord => Some("label-wrap-word"),
+            Self::LabelWrapChar => Some("label-wrap-char"),
+            Self::LabelEllipsize => Some("label-ellipsize"),
+            Self::LabelJustifyCenter => Some("label-justify-center"),
+            Self::LabelWidthChars => Some("label-width-chars"),
+            Self::LabelXalign => Some("label-xalign"),
+            Self::LabelDisabled => Some("label-disabled"),
+            Self::LevelbarContinuousDefault => Some("levelbar-continuous-default"),
+            Self::LevelbarContinuousLow => Some("levelbar-continuous-low"),
+            Self::LevelbarContinuousFull => Some("levelbar-continuous-full"),
+            Self::LevelbarContinuousVertical => Some("levelbar-continuous-vertical"),
+            Self::LevelbarDiscreteDefault => Some("levelbar-discrete-default"),
+            Self::LevelbarDiscreteInverted => Some("levelbar-discrete-inverted"),
+            Self::LevelbarDisabled => Some("levelbar-disabled"),
             Self::LinkDefault => Some("link-default"),
             Self::LinkVisited => Some("link-visited"),
             Self::MenuButtonTextDefault => Some("menu-button-text-default"),
@@ -108,10 +201,37 @@ impl Command {
             Self::MenuButtonFlat => Some("menu-button-flat"),
             Self::MenuButtonCircular => Some("menu-button-circular"),
             Self::MenuButtonDisabled => Some("menu-button-disabled"),
+            Self::ProgressbarHorizontal50 => Some("progressbar-horizontal-50"),
+            Self::ProgressbarHorizontal0 => Some("progressbar-horizontal-0"),
+            Self::ProgressbarHorizontal100 => Some("progressbar-horizontal-100"),
+            Self::ProgressbarVertical50 => Some("progressbar-vertical-50"),
+            Self::ProgressbarInverted50 => Some("progressbar-inverted-50"),
+            Self::ProgressbarTextCustom => Some("progressbar-text-custom"),
+            Self::ProgressbarOsdHorizontal => Some("progressbar-osd-horizontal"),
+            Self::ProgressbarFractionSmall => Some("progressbar-fraction-small"),
+            Self::RadioButtonDefault => Some("radio-button-default"),
+            Self::RadioButtonChecked => Some("radio-button-checked"),
+            Self::SeparatorHorizontalDefault => Some("separator-horizontal-default"),
+            Self::SeparatorVertical => Some("separator-vertical"),
+            Self::SeparatorSpacerHorizontal => Some("separator-spacer-horizontal"),
+            Self::SpinnerDefault => Some("spinner-default"),
+            Self::SpinnerSpinning => Some("spinner-spinning"),
+            Self::SpinnerSpinningCustomSize => Some("spinner-spinning-custom-size"),
+            Self::SpinnerDisabledNotSpinning => Some("spinner-disabled-not-spinning"),
+            Self::SpinnerDisabledSpinning => Some("spinner-disabled-spinning"),
+            Self::SwitchOffDefault => Some("switch-off-default"),
+            Self::SwitchOnDefault => Some("switch-on-default"),
+            Self::SwitchOffDisabled => Some("switch-off-disabled"),
+            Self::SwitchOnDisabled => Some("switch-on-disabled"),
             Self::ToggleTextDefault => Some("toggle-text-default"),
             Self::ToggleTextChecked => Some("toggle-text-checked"),
             Self::ToggleTextFlat => Some("toggle-text-flat"),
             Self::ToggleDisabled => Some("toggle-disabled"),
+            Self::WindowTitleTextDefault => Some("window-title-text-default"),
+            Self::WindowTitleWithSubtitle => Some("window-title-with-subtitle"),
+            Self::WindowTitleLongText => Some("window-title-long-text"),
+            Self::WindowTitleNoSubtitle => Some("window-title-no-subtitle"),
+            Self::WindowTitleBothEmpty => Some("window-title-both-empty"),
         }
     }
 }
@@ -130,6 +250,80 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "button-circular" => widget_case!(cases::button_circular::ButtonCircular, false),
         "button-pill" => widget_case!(cases::button_pill::ButtonPill, false),
         "button-disabled" => widget_case!(cases::button_disabled::ButtonDisabled, false),
+        "check-button-default" => widget_case!(cases::check_button_default::CheckButtonDefault, false),
+        "check-button-checked" => widget_case!(cases::check_button_checked::CheckButtonChecked, false),
+        "check-button-indeterminate" => {
+            widget_case!(cases::check_button_indeterminate::CheckButtonIndeterminate, false)
+        }
+        "check-button-disabled" => {
+            widget_case!(cases::check_button_disabled::CheckButtonDisabled, false)
+        }
+        "check-button-checked-disabled" => {
+            widget_case!(
+                cases::check_button_checked_disabled::CheckButtonCheckedDisabled,
+                false
+            )
+        }
+        "check-button-no-label" => widget_case!(cases::check_button_no_label::CheckButtonNoLabel, false),
+        "editable-label-display-default" => {
+            widget_case!(
+                cases::editable_label_display_default::EditableLabelDisplayDefault,
+                false
+            )
+        }
+        "editable-label-display-empty" => {
+            widget_case!(
+                cases::editable_label_display_empty::EditableLabelDisplayEmpty,
+                false
+            )
+        }
+        "editable-label-editing-active" => {
+            widget_case!(
+                cases::editable_label_editing_active::EditableLabelEditingActive,
+                false
+            )
+        }
+        "editable-label-disabled" => {
+            widget_case!(cases::editable_label_disabled::EditableLabelDisabled, false)
+        }
+        "image-default" => widget_case!(cases::image_default::ImageDefault, false),
+        "image-normal-icons" => widget_case!(cases::image_normal_icons::ImageNormalIcons, false),
+        "image-large-icons" => widget_case!(cases::image_large_icons::ImageLargeIcons, false),
+        "image-pixel-size-24" => widget_case!(cases::image_pixel_size_24::ImagePixelSize24, false),
+        "image-no-icon-name" => widget_case!(cases::image_no_icon_name::ImageNoIconName, false),
+        "label-default" => widget_case!(cases::label_default::LabelDefault, false),
+        "label-wrap-word" => widget_case!(cases::label_wrap_word::LabelWrapWord, false),
+        "label-wrap-char" => widget_case!(cases::label_wrap_char::LabelWrapChar, false),
+        "label-ellipsize" => widget_case!(cases::label_ellipsize::LabelEllipsize, false),
+        "label-justify-center" => widget_case!(cases::label_justify_center::LabelJustifyCenter, false),
+        "label-width-chars" => widget_case!(cases::label_width_chars::LabelWidthChars, false),
+        "label-xalign" => widget_case!(cases::label_xalign::LabelXalign, false),
+        "label-disabled" => widget_case!(cases::label_disabled::LabelDisabled, false),
+        "levelbar-continuous-default" => {
+            widget_case!(cases::levelbar_continuous_default::LevelbarContinuousDefault, false)
+        }
+        "levelbar-continuous-low" => {
+            widget_case!(cases::levelbar_continuous_low::LevelbarContinuousLow, false)
+        }
+        "levelbar-continuous-full" => {
+            widget_case!(cases::levelbar_continuous_full::LevelbarContinuousFull, false)
+        }
+        "levelbar-continuous-vertical" => {
+            widget_case!(
+                cases::levelbar_continuous_vertical::LevelbarContinuousVertical,
+                false
+            )
+        }
+        "levelbar-discrete-default" => {
+            widget_case!(cases::levelbar_discrete_default::LevelbarDiscreteDefault, false)
+        }
+        "levelbar-discrete-inverted" => {
+            widget_case!(
+                cases::levelbar_discrete_inverted::LevelbarDiscreteInverted,
+                false
+            )
+        }
+        "levelbar-disabled" => widget_case!(cases::levelbar_disabled::LevelbarDisabled, false),
         "link-default" => widget_case!(cases::link_default::LinkDefault, false),
         "link-visited" => widget_case!(cases::link_visited::LinkVisited, false),
         "menu-button-text-default" => {
@@ -143,10 +337,85 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "menu-button-disabled" => {
             widget_case!(cases::menu_button_disabled::MenuButtonDisabled, true)
         }
+        "progressbar-horizontal-50" => {
+            widget_case!(cases::progressbar_horizontal_50::ProgressbarHorizontal50, false)
+        }
+        "progressbar-horizontal-0" => {
+            widget_case!(cases::progressbar_horizontal_0::ProgressbarHorizontal0, false)
+        }
+        "progressbar-horizontal-100" => {
+            widget_case!(cases::progressbar_horizontal_100::ProgressbarHorizontal100, false)
+        }
+        "progressbar-vertical-50" => {
+            widget_case!(cases::progressbar_vertical_50::ProgressbarVertical50, false)
+        }
+        "progressbar-inverted-50" => {
+            widget_case!(cases::progressbar_inverted_50::ProgressbarInverted50, false)
+        }
+        "progressbar-text-custom" => {
+            widget_case!(cases::progressbar_text_custom::ProgressbarTextCustom, false)
+        }
+        "progressbar-osd-horizontal" => {
+            widget_case!(cases::progressbar_osd_horizontal::ProgressbarOsdHorizontal, false)
+        }
+        "progressbar-fraction-small" => {
+            widget_case!(cases::progressbar_fraction_small::ProgressbarFractionSmall, false)
+        }
+        "radio-button-default" => widget_case!(cases::radio_button_default::RadioButtonDefault, false),
+        "radio-button-checked" => widget_case!(cases::radio_button_checked::RadioButtonChecked, false),
+        "separator-horizontal-default" => {
+            widget_case!(
+                cases::separator_horizontal_default::SeparatorHorizontalDefault,
+                false
+            )
+        }
+        "separator-vertical" => widget_case!(cases::separator_vertical::SeparatorVertical, false),
+        "separator-spacer-horizontal" => {
+            widget_case!(
+                cases::separator_spacer_horizontal::SeparatorSpacerHorizontal,
+                false
+            )
+        }
+        "spinner-default" => widget_case!(cases::spinner_default::SpinnerDefault, false),
+        "spinner-spinning" => widget_case!(cases::spinner_spinning::SpinnerSpinning, false),
+        "spinner-spinning-custom-size" => {
+            widget_case!(
+                cases::spinner_spinning_custom_size::SpinnerSpinningCustomSize,
+                false
+            )
+        }
+        "spinner-disabled-not-spinning" => {
+            widget_case!(
+                cases::spinner_disabled_not_spinning::SpinnerDisabledNotSpinning,
+                false
+            )
+        }
+        "spinner-disabled-spinning" => {
+            widget_case!(cases::spinner_disabled_spinning::SpinnerDisabledSpinning, false)
+        }
+        "switch-off-default" => widget_case!(cases::switch_off_default::SwitchOffDefault, false),
+        "switch-on-default" => widget_case!(cases::switch_on_default::SwitchOnDefault, false),
+        "switch-off-disabled" => widget_case!(cases::switch_off_disabled::SwitchOffDisabled, false),
+        "switch-on-disabled" => widget_case!(cases::switch_on_disabled::SwitchOnDisabled, false),
         "toggle-text-default" => widget_case!(cases::toggle_text_default::ToggleTextDefault, false),
         "toggle-text-checked" => widget_case!(cases::toggle_text_checked::ToggleTextChecked, false),
         "toggle-text-flat" => widget_case!(cases::toggle_text_flat::ToggleTextFlat, false),
         "toggle-disabled" => widget_case!(cases::toggle_disabled::ToggleDisabled, false),
+        "window-title-text-default" => {
+            widget_case!(cases::window_title_text_default::WindowTitleTextDefault, false)
+        }
+        "window-title-with-subtitle" => {
+            widget_case!(cases::window_title_with_subtitle::WindowTitleWithSubtitle, false)
+        }
+        "window-title-long-text" => {
+            widget_case!(cases::window_title_long_text::WindowTitleLongText, false)
+        }
+        "window-title-no-subtitle" => {
+            widget_case!(cases::window_title_no_subtitle::WindowTitleNoSubtitle, false)
+        }
+        "window-title-both-empty" => {
+            widget_case!(cases::window_title_both_empty::WindowTitleBothEmpty, false)
+        }
         _ => None,
     }
 }
@@ -162,6 +431,36 @@ fn is_known_case(name: &str) -> bool {
             | "button-circular"
             | "button-pill"
             | "button-disabled"
+            | "check-button-default"
+            | "check-button-checked"
+            | "check-button-indeterminate"
+            | "check-button-disabled"
+            | "check-button-checked-disabled"
+            | "check-button-no-label"
+            | "editable-label-display-default"
+            | "editable-label-display-empty"
+            | "editable-label-editing-active"
+            | "editable-label-disabled"
+            | "image-default"
+            | "image-normal-icons"
+            | "image-large-icons"
+            | "image-pixel-size-24"
+            | "image-no-icon-name"
+            | "label-default"
+            | "label-wrap-word"
+            | "label-wrap-char"
+            | "label-ellipsize"
+            | "label-justify-center"
+            | "label-width-chars"
+            | "label-xalign"
+            | "label-disabled"
+            | "levelbar-continuous-default"
+            | "levelbar-continuous-low"
+            | "levelbar-continuous-full"
+            | "levelbar-continuous-vertical"
+            | "levelbar-discrete-default"
+            | "levelbar-discrete-inverted"
+            | "levelbar-disabled"
             | "link-default"
             | "link-visited"
             | "menu-button-text-default"
@@ -169,10 +468,37 @@ fn is_known_case(name: &str) -> bool {
             | "menu-button-flat"
             | "menu-button-circular"
             | "menu-button-disabled"
+            | "progressbar-horizontal-50"
+            | "progressbar-horizontal-0"
+            | "progressbar-horizontal-100"
+            | "progressbar-vertical-50"
+            | "progressbar-inverted-50"
+            | "progressbar-text-custom"
+            | "progressbar-osd-horizontal"
+            | "progressbar-fraction-small"
+            | "radio-button-default"
+            | "radio-button-checked"
+            | "separator-horizontal-default"
+            | "separator-vertical"
+            | "separator-spacer-horizontal"
+            | "spinner-default"
+            | "spinner-spinning"
+            | "spinner-spinning-custom-size"
+            | "spinner-disabled-not-spinning"
+            | "spinner-disabled-spinning"
+            | "switch-off-default"
+            | "switch-on-default"
+            | "switch-off-disabled"
+            | "switch-on-disabled"
             | "toggle-text-default"
             | "toggle-text-checked"
             | "toggle-text-flat"
             | "toggle-disabled"
+            | "window-title-text-default"
+            | "window-title-with-subtitle"
+            | "window-title-long-text"
+            | "window-title-no-subtitle"
+            | "window-title-both-empty"
     )
 }
 
@@ -209,14 +535,7 @@ fn render_snapshot_json(widget: &gtk::Widget, use_inner: bool) -> Result<String,
         ));
     }
 
-    let paintable = gtk::WidgetPaintable::new(Some(&target));
-    let snapshot = gtk::Snapshot::new();
-    paintable.snapshot(&snapshot, target_width as f64, target_height as f64);
-
-    let node = snapshot
-        .to_node()
-        .ok_or_else(|| "No render node produced".to_string())?;
-    let result = extract::extract_with_widget(&node, &target);
+    let result = extract::extract_widget_tree(&target);
 
     serde_json::to_string_pretty(&result).map_err(|err| err.to_string())
 }

@@ -29,8 +29,8 @@ export const GtkWindowTitle = forwardRef<HTMLDivElement, GtkWindowTitleProps>(
         style={{ alignItems: "center" }}
         {...rest}
       >
-        <span className="title">{title}</span>
-        {subtitle && <span className="subtitle">{subtitle}</span>}
+        <span className="gtk-label title">{title}</span>
+        {subtitle && <span className="gtk-label subtitle">{subtitle}</span>}
       </div>
     );
   },

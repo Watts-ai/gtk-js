@@ -32,6 +32,9 @@ export interface WidgetSnapshot {
   shadows: ShadowInfo[];
   inset_shadows: InsetShadowInfo[];
   opacity: number;
+  css_name?: string;
+  css_classes?: string[];
+  children?: WidgetSnapshot[];
 }
 
 export interface Sides {
@@ -66,7 +69,8 @@ interface ShadowInfo {
   color: Color;
   dx: number;
   dy: number;
-  radius: number;
+  spread: number;
+  blur_radius: number;
 }
 
 interface InsetShadowInfo {
@@ -149,6 +153,66 @@ function parseColor(value: string): Color | null {
   return null;
 }
 
+/**
+ * Parse a CSS box-shadow string into separate shadow objects.
+ * Format: [inset] <dx> <dy> <blur> [spread] <color>, ...
+ * Native GTK ShadowNode has: color, dx, dy, radius (blur).
+ * Native GTK InsetShadowNode has: color, dx, dy, spread, blur_radius.
+ */
+function parseBoxShadow(value: string): {
+  shadows: ShadowInfo[];
+  inset_shadows: InsetShadowInfo[];
+} {
+  const shadows: ShadowInfo[] = [];
+  const inset_shadows: InsetShadowInfo[] = [];
+
+  if (!value || value === "none") return { shadows, inset_shadows };
+
+  // Split on commas that are NOT inside parentheses (e.g., rgba(...))
+  const parts: string[] = [];
+  let depth = 0;
+  let current = "";
+  for (const ch of value) {
+    if (ch === "(") depth++;
+    else if (ch === ")") depth--;
+    else if (ch === "," && depth === 0) {
+      parts.push(current.trim());
+      current = "";
+      continue;
+    }
+    current += ch;
+  }
+  if (current.trim()) parts.push(current.trim());
+
+  for (const part of parts) {
+    // Browsers may place "inset" at start OR end of computed box-shadow value.
+    const isInset = /\binset\b/.test(part);
+    const cleaned = part.replace(/\binset\b/, "").trim();
+
+    // Extract color — find the last color-like token (rgb/rgba/color/oklab or named color)
+    // CSS computed style always gives the color first, then the numbers
+    const colorMatch = cleaned.match(/^((?:rgba?\([^)]+\)|color\([^)]+\)|oklab\([^)]+\)))\s+(.*)/);
+    if (!colorMatch) continue;
+
+    const color = parseColor(colorMatch[1]);
+    if (!color) continue;
+
+    const nums = colorMatch[2].split(/\s+/).map((s) => parseFloat(s));
+    const dx = nums[0] || 0;
+    const dy = nums[1] || 0;
+    const blur = nums[2] || 0;
+    const spread = nums[3] || 0;
+
+    if (isInset) {
+      inset_shadows.push({ color, dx, dy, spread, blur_radius: blur });
+    } else {
+      shadows.push({ color, dx, dy, spread, blur_radius: blur });
+    }
+  }
+
+  return { shadows, inset_shadows };
+}
+
 export function getNativeSnapshot(caseName: string): Promise<WidgetSnapshot> {
   const cached = nativeSnapshotCache.get(caseName);
   if (cached) return cached;
@@ -184,68 +248,110 @@ export async function extractWebStyles(
 
   try {
     debugLog("web", `read case=${caseName} browser=${browserName}`);
-    await page.locator(rootSelector).waitFor();
+    await page.locator(rootSelector).waitFor({ state: "attached" });
     debugLog("web", `selector ready case=${caseName} browser=${browserName}`);
-    const raw = await page.locator(selector).evaluate((el: HTMLElement) => {
-      const cs = getComputedStyle(el);
-      const rect = el.getBoundingClientRect();
-      return {
-        width: rect.width,
-        height: rect.height,
-        padding: {
-          top: parseFloat(cs.paddingTop),
-          right: parseFloat(cs.paddingRight),
-          bottom: parseFloat(cs.paddingBottom),
-          left: parseFloat(cs.paddingLeft),
-        },
-        border_radius: {
-          top_left: parseFloat(cs.borderTopLeftRadius),
-          top_right: parseFloat(cs.borderTopRightRadius),
-          bottom_right: parseFloat(cs.borderBottomRightRadius),
-          bottom_left: parseFloat(cs.borderBottomLeftRadius),
-        },
-        background_color: cs.backgroundColor,
-        border_widths: {
-          top: parseFloat(cs.borderTopWidth),
-          right: parseFloat(cs.borderRightWidth),
-          bottom: parseFloat(cs.borderBottomWidth),
-          left: parseFloat(cs.borderLeftWidth),
-        },
-        border_colors: {
-          top: cs.borderTopColor,
-          right: cs.borderRightColor,
-          bottom: cs.borderBottomColor,
-          left: cs.borderLeftColor,
-        },
-        color: cs.color,
-        font_family: cs.fontFamily.replace(/['"]/g, "").split(",")[0].trim(),
-        font_weight: parseInt(cs.fontWeight),
-        shadows: [] as string[],
-        inset_shadows: [] as string[],
-        opacity: parseFloat(cs.opacity),
-      };
+    interface RawElementData {
+      width: number;
+      height: number;
+      padding: Sides;
+      border_radius: Corners;
+      background_color: string;
+      border_widths: Sides;
+      border_colors: { top: string; right: string; bottom: string; left: string };
+      color: string;
+      font_family: string;
+      font_weight: number;
+      box_shadow: string;
+      opacity: number;
+      css_classes: string[];
+      tag_name: string;
+      children: RawElementData[];
+    }
+
+    const raw: RawElementData = await page.locator(selector).evaluate((el: HTMLElement) => {
+      function extractElement(element: HTMLElement): RawElementData {
+        const cs = getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        const children: RawElementData[] = [];
+        for (const child of element.children) {
+          if (child instanceof HTMLElement) {
+            children.push(extractElement(child));
+          }
+        }
+        return {
+          width: rect.width,
+          height: rect.height,
+          padding: {
+            top: parseFloat(cs.paddingTop),
+            right: parseFloat(cs.paddingRight),
+            bottom: parseFloat(cs.paddingBottom),
+            left: parseFloat(cs.paddingLeft),
+          },
+          border_radius: {
+            top_left: parseFloat(cs.borderTopLeftRadius),
+            top_right: parseFloat(cs.borderTopRightRadius),
+            bottom_right: parseFloat(cs.borderBottomRightRadius),
+            bottom_left: parseFloat(cs.borderBottomLeftRadius),
+          },
+          background_color: cs.backgroundColor,
+          border_widths: {
+            top: parseFloat(cs.borderTopWidth),
+            right: parseFloat(cs.borderRightWidth),
+            bottom: parseFloat(cs.borderBottomWidth),
+            left: parseFloat(cs.borderLeftWidth),
+          },
+          border_colors: {
+            top: cs.borderTopColor,
+            right: cs.borderRightColor,
+            bottom: cs.borderBottomColor,
+            left: cs.borderLeftColor,
+          },
+          color: cs.color,
+          font_family: cs.fontFamily.replace(/['"]/g, "").split(",")[0].trim(),
+          font_weight: parseInt(cs.fontWeight),
+          box_shadow: cs.boxShadow,
+          opacity: parseFloat(cs.opacity),
+          css_classes: Array.from(element.classList),
+          tag_name: element.tagName.toLowerCase(),
+          children,
+        };
+      }
+      return extractElement(el);
     });
 
-    return {
-      width: raw.width,
-      height: raw.height,
-      padding: raw.padding,
-      border_radius: raw.border_radius,
-      background_color: parseColor(raw.background_color),
-      border_widths: raw.border_widths,
-      border_colors: {
-        top: parseColor(raw.border_colors.top),
-        right: parseColor(raw.border_colors.right),
-        bottom: parseColor(raw.border_colors.bottom),
-        left: parseColor(raw.border_colors.left),
-      },
-      color: parseColor(raw.color),
-      font_family: raw.font_family,
-      font_weight: raw.font_weight,
-      shadows: [],
-      inset_shadows: [],
-      opacity: raw.opacity,
-    };
+    function parseRawSnapshot(r: RawElementData): WidgetSnapshot {
+      const boxShadow = parseBoxShadow(r.box_shadow);
+      const cssNameClass = r.css_classes.find((c) => c.startsWith("gtk-") || c.startsWith("adw-"));
+      const cssName = cssNameClass
+        ? cssNameClass.replace(/^gtk-/, "").replace(/^adw-/, "")
+        : r.tag_name;
+
+      return {
+        width: r.width,
+        height: r.height,
+        padding: r.padding,
+        border_radius: r.border_radius,
+        background_color: parseColor(r.background_color),
+        border_widths: r.border_widths,
+        border_colors: {
+          top: parseColor(r.border_colors.top),
+          right: parseColor(r.border_colors.right),
+          bottom: parseColor(r.border_colors.bottom),
+          left: parseColor(r.border_colors.left),
+        },
+        color: parseColor(r.color),
+        font_family: r.font_family,
+        font_weight: r.font_weight,
+        shadows: boxShadow.shadows,
+        inset_shadows: boxShadow.inset_shadows,
+        opacity: r.opacity,
+        css_name: cssName,
+        css_classes: r.css_classes,
+        children: r.children.map(parseRawSnapshot),
+      };
+    }
+
+    return parseRawSnapshot(raw);
   } catch (error) {
     if (isPageClosedError(error)) {
       throw error;
@@ -311,10 +417,14 @@ export function compare(native: WidgetSnapshot, web: WidgetSnapshot): CompareRes
 
   // GTK clamps border-radius to min(width,height)/2 at paint time,
   // but browsers keep the literal CSS value (e.g. 9999px from Adwaita SCSS).
-  const halfMin = Math.min(native.width, native.height) / 2;
+  const halfMinNative = Math.min(native.width, native.height) / 2;
+  const halfMinWeb = Math.min(web.width, web.height) / 2;
   function checkRadius(property: string, n: number, w: number) {
-    const clamp = (r: number) => Math.min(r, halfMin);
-    if (!numbersMatch(clamp(n), clamp(w))) {
+    // If both values are >= their own element's halfMin, both sides are "fully round"
+    // (border-radius: 50% on different-sized elements produces different pixel values
+    // but the same visual result). Theme-agnostic: works for any theme that uses 50%.
+    if (n >= halfMinNative - 0.5 && w >= halfMinWeb - 0.5) return;
+    if (!numbersMatch(Math.min(n, halfMinNative), Math.min(w, halfMinNative))) {
       failures.push({ property, native: n, web: w });
     }
   }
@@ -358,7 +468,62 @@ export function compare(native: WidgetSnapshot, web: WidgetSnapshot): CompareRes
 
   checkNumber("opacity", native.opacity, web.opacity);
 
+  // Shadow comparison
+  const maxShadows = Math.max(native.shadows.length, web.shadows.length);
+  for (let i = 0; i < maxShadows; i++) {
+    const ns = native.shadows[i];
+    const ws = web.shadows[i];
+    if (!ns || !ws) {
+      failures.push({
+        property: `shadows[${i}]`,
+        native: ns ?? null,
+        web: ws ?? null,
+      });
+      continue;
+    }
+    checkColor(`shadows[${i}].color`, ns.color, ws.color);
+    checkNumber(`shadows[${i}].dx`, ns.dx, ws.dx);
+    checkNumber(`shadows[${i}].dy`, ns.dy, ws.dy);
+    checkNumber(`shadows[${i}].spread`, ns.spread, ws.spread);
+    checkNumber(`shadows[${i}].blur_radius`, ns.blur_radius, ws.blur_radius);
+  }
+
+  const maxInsetShadows = Math.max(native.inset_shadows.length, web.inset_shadows.length);
+  for (let i = 0; i < maxInsetShadows; i++) {
+    const ns = native.inset_shadows[i];
+    const ws = web.inset_shadows[i];
+    if (!ns || !ws) {
+      failures.push({
+        property: `inset_shadows[${i}]`,
+        native: ns ?? null,
+        web: ws ?? null,
+      });
+      continue;
+    }
+    checkColor(`inset_shadows[${i}].color`, ns.color, ws.color);
+    checkNumber(`inset_shadows[${i}].dx`, ns.dx, ws.dx);
+    checkNumber(`inset_shadows[${i}].dy`, ns.dy, ws.dy);
+    checkNumber(`inset_shadows[${i}].spread`, ns.spread, ws.spread);
+    checkNumber(`inset_shadows[${i}].blur_radius`, ns.blur_radius, ws.blur_radius);
+  }
+
   return { failures };
+}
+
+/** Find a child in a widget tree by CSS name (e.g., "progress", "trough", "check").
+ *  Searches breadth-first. Returns the nth match (default: first). */
+export function findChild(tree: WidgetSnapshot, cssName: string, index = 0): WidgetSnapshot {
+  const queue = [...(tree.children ?? [])];
+  let found = 0;
+  while (queue.length > 0) {
+    const node = queue.shift()!;
+    if (node.css_name === cssName) {
+      if (found === index) return node;
+      found++;
+    }
+    if (node.children) queue.push(...node.children);
+  }
+  throw new Error(`Child with css_name="${cssName}" (index ${index}) not found in tree`);
 }
 
 export type GtkTestCallback = (native: WidgetSnapshot, web: WidgetSnapshot) => void;
