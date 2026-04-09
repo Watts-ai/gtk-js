@@ -424,6 +424,10 @@ export function compare(native: WidgetSnapshot, web: WidgetSnapshot): CompareRes
     // (border-radius: 50% on different-sized elements produces different pixel values
     // but the same visual result). Theme-agnostic: works for any theme that uses 50%.
     if (n >= halfMinNative - 0.5 && w >= halfMinWeb - 0.5) return;
+    // If the raw values are already equal, the radius is correct on both sides —
+    // no need to clamp. (Clamping would differ when one element is unusually small,
+    // e.g. a widget whose web layout hasn't been fully replicated yet.)
+    if (numbersMatch(n, w)) return;
     if (!numbersMatch(Math.min(n, halfMinNative), Math.min(w, halfMinWeb))) {
       failures.push({ property, native: n, web: w });
     }

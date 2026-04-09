@@ -207,8 +207,8 @@ const remapPseudoClasses: Plugin = {
     // :visited → [data-visited] (browsers restrict :visited styling; use data attribute)
     sel = sel.replace(/:visited/g, "[data-visited]");
 
-    // :disabled → :is(:disabled, [data-disabled]) (<span> doesn't support :disabled natively)
-    sel = sel.replace(/:disabled/g, ":is(:disabled, [data-disabled])");
+    // :disabled → [data-disabled] (<span> doesn't support :disabled natively)
+    sel = sel.replace(/:disabled/g, "[data-disabled]");
 
     if (sel !== rule.selector) {
       rule.selector = sel;

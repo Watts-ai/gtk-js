@@ -80,6 +80,17 @@ GTK uses `content-box` sizing — `min-height` refers to content only, padding i
 - GtkLabel needs `display: inline-flex; align-items: center` to match GTK's default `yalign=0.5`.
 - GtkImage needs `display: inline-flex` to form a proper box for circular `border-radius`.
 
+## Running Tests
+
+Always pipe test output to a file, then read it. Never rely on direct terminal output for test runs:
+
+```sh
+bun test > /tmp/out.txt 2>&1
+# then read /tmp/out.txt
+```
+
+`bun test` streams large JSON snapshots on failure that overflow terminal buffers. Same applies to any long-running test command.
+
 ## Updating Upstream
 
 ```sh

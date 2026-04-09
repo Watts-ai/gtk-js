@@ -250,10 +250,17 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "button-circular" => widget_case!(cases::button_circular::ButtonCircular, false),
         "button-pill" => widget_case!(cases::button_pill::ButtonPill, false),
         "button-disabled" => widget_case!(cases::button_disabled::ButtonDisabled, false),
-        "check-button-default" => widget_case!(cases::check_button_default::CheckButtonDefault, false),
-        "check-button-checked" => widget_case!(cases::check_button_checked::CheckButtonChecked, false),
+        "check-button-default" => {
+            widget_case!(cases::check_button_default::CheckButtonDefault, false)
+        }
+        "check-button-checked" => {
+            widget_case!(cases::check_button_checked::CheckButtonChecked, false)
+        }
         "check-button-indeterminate" => {
-            widget_case!(cases::check_button_indeterminate::CheckButtonIndeterminate, false)
+            widget_case!(
+                cases::check_button_indeterminate::CheckButtonIndeterminate,
+                false
+            )
         }
         "check-button-disabled" => {
             widget_case!(cases::check_button_disabled::CheckButtonDisabled, false)
@@ -264,7 +271,9 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
                 false
             )
         }
-        "check-button-no-label" => widget_case!(cases::check_button_no_label::CheckButtonNoLabel, false),
+        "check-button-no-label" => {
+            widget_case!(cases::check_button_no_label::CheckButtonNoLabel, false)
+        }
         "editable-label-display-default" => {
             widget_case!(
                 cases::editable_label_display_default::EditableLabelDisplayDefault,
@@ -295,18 +304,26 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "label-wrap-word" => widget_case!(cases::label_wrap_word::LabelWrapWord, false),
         "label-wrap-char" => widget_case!(cases::label_wrap_char::LabelWrapChar, false),
         "label-ellipsize" => widget_case!(cases::label_ellipsize::LabelEllipsize, false),
-        "label-justify-center" => widget_case!(cases::label_justify_center::LabelJustifyCenter, false),
+        "label-justify-center" => {
+            widget_case!(cases::label_justify_center::LabelJustifyCenter, false)
+        }
         "label-width-chars" => widget_case!(cases::label_width_chars::LabelWidthChars, false),
         "label-xalign" => widget_case!(cases::label_xalign::LabelXalign, false),
         "label-disabled" => widget_case!(cases::label_disabled::LabelDisabled, false),
         "levelbar-continuous-default" => {
-            widget_case!(cases::levelbar_continuous_default::LevelbarContinuousDefault, false)
+            widget_case!(
+                cases::levelbar_continuous_default::LevelbarContinuousDefault,
+                false
+            )
         }
         "levelbar-continuous-low" => {
             widget_case!(cases::levelbar_continuous_low::LevelbarContinuousLow, false)
         }
         "levelbar-continuous-full" => {
-            widget_case!(cases::levelbar_continuous_full::LevelbarContinuousFull, false)
+            widget_case!(
+                cases::levelbar_continuous_full::LevelbarContinuousFull,
+                false
+            )
         }
         "levelbar-continuous-vertical" => {
             widget_case!(
@@ -315,7 +332,10 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             )
         }
         "levelbar-discrete-default" => {
-            widget_case!(cases::levelbar_discrete_default::LevelbarDiscreteDefault, false)
+            widget_case!(
+                cases::levelbar_discrete_default::LevelbarDiscreteDefault,
+                false
+            )
         }
         "levelbar-discrete-inverted" => {
             widget_case!(
@@ -338,13 +358,22 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::menu_button_disabled::MenuButtonDisabled, true)
         }
         "progressbar-horizontal-50" => {
-            widget_case!(cases::progressbar_horizontal_50::ProgressbarHorizontal50, false)
+            widget_case!(
+                cases::progressbar_horizontal_50::ProgressbarHorizontal50,
+                false
+            )
         }
         "progressbar-horizontal-0" => {
-            widget_case!(cases::progressbar_horizontal_0::ProgressbarHorizontal0, false)
+            widget_case!(
+                cases::progressbar_horizontal_0::ProgressbarHorizontal0,
+                false
+            )
         }
         "progressbar-horizontal-100" => {
-            widget_case!(cases::progressbar_horizontal_100::ProgressbarHorizontal100, false)
+            widget_case!(
+                cases::progressbar_horizontal_100::ProgressbarHorizontal100,
+                false
+            )
         }
         "progressbar-vertical-50" => {
             widget_case!(cases::progressbar_vertical_50::ProgressbarVertical50, false)
@@ -356,13 +385,23 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::progressbar_text_custom::ProgressbarTextCustom, false)
         }
         "progressbar-osd-horizontal" => {
-            widget_case!(cases::progressbar_osd_horizontal::ProgressbarOsdHorizontal, false)
+            widget_case!(
+                cases::progressbar_osd_horizontal::ProgressbarOsdHorizontal,
+                false
+            )
         }
         "progressbar-fraction-small" => {
-            widget_case!(cases::progressbar_fraction_small::ProgressbarFractionSmall, false)
+            widget_case!(
+                cases::progressbar_fraction_small::ProgressbarFractionSmall,
+                false
+            )
         }
-        "radio-button-default" => widget_case!(cases::radio_button_default::RadioButtonDefault, false),
-        "radio-button-checked" => widget_case!(cases::radio_button_checked::RadioButtonChecked, false),
+        "radio-button-default" => {
+            widget_case!(cases::radio_button_default::RadioButtonDefault, false)
+        }
+        "radio-button-checked" => {
+            widget_case!(cases::radio_button_checked::RadioButtonChecked, false)
+        }
         "separator-horizontal-default" => {
             widget_case!(
                 cases::separator_horizontal_default::SeparatorHorizontalDefault,
@@ -391,7 +430,10 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             )
         }
         "spinner-disabled-spinning" => {
-            widget_case!(cases::spinner_disabled_spinning::SpinnerDisabledSpinning, false)
+            widget_case!(
+                cases::spinner_disabled_spinning::SpinnerDisabledSpinning,
+                false
+            )
         }
         "switch-off-default" => widget_case!(cases::switch_off_default::SwitchOffDefault, false),
         "switch-on-default" => widget_case!(cases::switch_on_default::SwitchOnDefault, false),
@@ -402,16 +444,25 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
         "toggle-text-flat" => widget_case!(cases::toggle_text_flat::ToggleTextFlat, false),
         "toggle-disabled" => widget_case!(cases::toggle_disabled::ToggleDisabled, false),
         "window-title-text-default" => {
-            widget_case!(cases::window_title_text_default::WindowTitleTextDefault, false)
+            widget_case!(
+                cases::window_title_text_default::WindowTitleTextDefault,
+                false
+            )
         }
         "window-title-with-subtitle" => {
-            widget_case!(cases::window_title_with_subtitle::WindowTitleWithSubtitle, false)
+            widget_case!(
+                cases::window_title_with_subtitle::WindowTitleWithSubtitle,
+                false
+            )
         }
         "window-title-long-text" => {
             widget_case!(cases::window_title_long_text::WindowTitleLongText, false)
         }
         "window-title-no-subtitle" => {
-            widget_case!(cases::window_title_no_subtitle::WindowTitleNoSubtitle, false)
+            widget_case!(
+                cases::window_title_no_subtitle::WindowTitleNoSubtitle,
+                false
+            )
         }
         "window-title-both-empty" => {
             widget_case!(cases::window_title_both_empty::WindowTitleBothEmpty, false)
