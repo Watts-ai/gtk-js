@@ -1,3 +1,6 @@
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import type { Server } from "bun";
 import { type Browser, type Page, chromium, firefox } from "playwright";
 import { startTestServer } from "./server";
@@ -17,34 +20,6 @@ function debugEnabled(): boolean {
 function debugLog(message: string): void {
   if (debugEnabled()) {
     console.error(`[setup] ${message}`);
-  }
-}
-
-async function readLine(stream: ReadableStream<Uint8Array> | null | undefined): Promise<string> {
-  if (!stream) {
-    throw new Error("Native server stdout is unavailable");
-  }
-
-  const reader = stream.getReader();
-  const decoder = new TextDecoder();
-  let buffer = "";
-
-  while (true) {
-    const { done, value } = await reader.read();
-
-    if (done) {
-      throw new Error(`Native server exited before reporting a port.\nPartial output: ${buffer}`);
-    }
-
-    buffer += decoder.decode(value, { stream: true });
-    const newlineIndex = buffer.indexOf("\n");
-    if (newlineIndex === -1) {
-      continue;
-    }
-
-    const line = buffer.slice(0, newlineIndex).trim();
-    reader.releaseLock();
-    return line;
   }
 }
 
@@ -69,6 +44,26 @@ async function waitForNativeReady(port: number): Promise<void> {
   }
 
   throw new Error(`Native server on port ${port} did not become ready within 15s`);
+}
+
+async function waitForPortFile(path: string): Promise<number> {
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < 15000) {
+    try {
+      const text = (await readFile(path, "utf8")).trim();
+      const port = Number(text);
+      if (Number.isInteger(port) && port > 0) {
+        return port;
+      }
+    } catch {
+      // Keep polling until the port file exists and contains a port.
+    }
+
+    await Bun.sleep(100);
+  }
+
+  throw new Error(`Native server did not write a port file within 15s: ${path}`);
 }
 
 async function createHostPage(browser: Browser): Promise<Page> {
@@ -100,19 +95,23 @@ if (cargoBuildExit !== 0) {
 }
 debugLog("native binary build finished");
 
+const nativeServerDir = await mkdtemp(join(tmpdir(), "gtk-js-native-"));
+const nativePortFile = join(nativeServerDir, "port");
 const nativeServer = Bun.spawn(
-  ["xvfb-run", "-a", "tests/native/target/debug/gtk-js-test", "serve"],
+  [
+    "xvfb-run",
+    "-a",
+    "tests/native/target/debug/gtk-js-test",
+    "serve",
+    "--port-file",
+    nativePortFile,
+  ],
   { stdout: "pipe", stderr: "inherit" },
 );
 debugLog(`spawned native server pid=${nativeServer.pid ?? "unknown"}`);
 
-const portLine = await readLine(nativeServer.stdout);
-const portMatch = /^LISTENING:(\d+)$/.exec(portLine);
-if (!portMatch) {
-  nativeServer.kill();
-  throw new Error(`Native server failed to report port: ${portLine}`);
-}
-debugLog(`native server listening on ${portMatch[1]}`);
+const nativeServerPort = await waitForPortFile(nativePortFile);
+debugLog(`native server listening on ${nativeServerPort}`);
 
 const [chromiumHostPage, firefoxHostPage] = await Promise.all([
   createHostPage(chromiumBrowser),
@@ -136,7 +135,7 @@ globalThis.__testPages = {
   firefox: firefoxHostPage,
 };
 globalThis.__testServer = server;
-globalThis.__nativeServerPort = Number(portMatch[1]);
+globalThis.__nativeServerPort = nativeServerPort;
 globalThis.__nativeServerProcess = nativeServer;
 
 await waitForNativeReady(globalThis.__nativeServerPort);
@@ -145,6 +144,7 @@ process.on("exit", () => {
   debugLog("process exit; stopping native server and web server");
   nativeServer.kill();
   server.stop();
+  void rm(nativeServerDir, { recursive: true, force: true });
 });
 
 // Browsers must be closed async — use beforeExit which fires before final exit

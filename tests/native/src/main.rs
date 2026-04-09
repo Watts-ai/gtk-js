@@ -9,10 +9,10 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
+use axum::Router;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
 use axum::routing::get;
-use axum::Router;
 use clap::{Parser, Subcommand};
 use relm4::adw;
 use relm4::adw::prelude::*;
@@ -33,7 +33,10 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
-    Serve,
+    Serve {
+        #[arg(long)]
+        port_file: Option<PathBuf>,
+    },
     ButtonTextDefault,
     ButtonTextFlat,
     ButtonTextSuggested,
@@ -79,14 +82,17 @@ fn debug_log(message: impl AsRef<str>) {
 macro_rules! widget_case {
     ($component:path, $use_inner:expr) => {{
         let component = <$component>::builder().launch(()).detach();
-        Some((component.widget().clone().upcast::<gtk::Widget>(), $use_inner))
+        Some((
+            component.widget().clone().upcast::<gtk::Widget>(),
+            $use_inner,
+        ))
     }};
 }
 
 impl Command {
     fn case_name(&self) -> Option<&'static str> {
         match self {
-            Self::Serve => None,
+            Self::Serve { .. } => None,
             Self::ButtonTextDefault => Some("button-text-default"),
             Self::ButtonTextFlat => Some("button-text-flat"),
             Self::ButtonTextSuggested => Some("button-text-suggested"),
@@ -173,7 +179,9 @@ fn render_snapshot_json(widget: &gtk::Widget, use_inner: bool) -> Result<String,
 
     if target_width <= 0 || target_height <= 0 {
         let label = if use_inner { "Inner widget" } else { "Widget" };
-        return Err(format!("{label} has zero size, layout may not have completed"));
+        return Err(format!(
+            "{label} has zero size, layout may not have completed"
+        ));
     }
 
     let paintable = gtk::WidgetPaintable::new(Some(&target));
@@ -255,7 +263,9 @@ fn run_single_snapshot(case_name: &'static str, output: Option<PathBuf>) {
 fn handle_snapshot_request(request: NativeRequest) {
     debug_log(format!("received request for {}", request.case_name));
     let Some((widget, use_inner)) = create_widget_for_case(&request.case_name) else {
-        let _ = request.response.send(Err(format!("Unknown case: {}", request.case_name)));
+        let _ = request
+            .response
+            .send(Err(format!("Unknown case: {}", request.case_name)));
         return;
     };
 
@@ -310,7 +320,7 @@ async fn ready_handler(State(state): State<ServerState>) -> Result<&'static str,
     }
 }
 
-fn run_server() {
+fn run_server(port_file: Option<PathBuf>) {
     configure_environment();
     gtk::init().expect("Failed to initialize GTK");
     adw::init().expect("Failed to initialize libadwaita");
@@ -324,7 +334,11 @@ fn run_server() {
     let receiver_for_loop = Arc::clone(&receiver);
     gtk::glib::timeout_add_local(Duration::from_millis(1), move || {
         loop {
-            let request = match receiver_for_loop.lock().expect("receiver poisoned").try_recv() {
+            let request = match receiver_for_loop
+                .lock()
+                .expect("receiver poisoned")
+                .try_recv()
+            {
                 Ok(request) => request,
                 Err(mpsc::TryRecvError::Empty) => break,
                 Err(mpsc::TryRecvError::Disconnected) => return gtk::glib::ControlFlow::Break,
@@ -354,14 +368,17 @@ fn run_server() {
                 .expect("Failed to get native server address")
                 .port();
 
-            let listener =
-                tokio::net::TcpListener::from_std(listener).expect("Failed to create tokio listener");
+            let listener = tokio::net::TcpListener::from_std(listener)
+                .expect("Failed to create tokio listener");
             let state = ServerState { sender, ready };
             let router = Router::new()
                 .route("/ready", get(ready_handler))
                 .route("/{case}", get(snapshot_handler))
                 .with_state(state);
             debug_log(format!("http server listening on 127.0.0.1:{port}"));
+            if let Some(path) = port_file {
+                std::fs::write(&path, format!("{port}\n")).expect("Failed to write port file");
+            }
             println!("LISTENING:{port}");
             std::io::stdout().flush().expect("Failed to flush stdout");
 
@@ -379,7 +396,7 @@ fn main() {
     let output = cli.output;
 
     match cli.command {
-        Command::Serve => run_server(),
+        Command::Serve { port_file } => run_server(port_file),
         command => run_single_snapshot(command.case_name().expect("case command"), output),
     }
 }
