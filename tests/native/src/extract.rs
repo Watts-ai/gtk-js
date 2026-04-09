@@ -240,6 +240,16 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
             if snapshot.background_color.is_none() {
                 // Only treat as background if the node covers a significant area.
                 // Thin slivers (e.g. text underline decorations) should be ignored.
+                //
+                // Known limitation: WidgetPaintable renders the widget from the window's
+                // full render tree, clipped to widget bounds. A parent window background
+                // (ColorNode covering the whole window) therefore shows up here with the
+                // same bounds as the widget itself and is indistinguishable from the
+                // widget's own CSS background. GTK4 removed the style-context property
+                // inspection APIs that would let us verify the widget's own CSS background
+                // independently. Widgets that have no CSS background but sit on a solid
+                // window background will report the window color here. Tests for such
+                // widgets (e.g. GtkImage with an icon) must filter background_color.
                 let bounds = color_node.bounds();
                 let area = bounds.width() * bounds.height();
                 let min_bg_area = snapshot.width * snapshot.height * 0.1;
