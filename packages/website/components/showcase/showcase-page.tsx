@@ -131,6 +131,8 @@ function AccentPicker({
         <button
           key={color}
           title={color}
+          aria-label={color}
+          aria-pressed={value === color}
           onClick={() => onChange(color)}
           style={{
             width: 22,
@@ -186,8 +188,8 @@ export function ShowcasePage() {
     return new AdwaitaTheme({ colorScheme, accentColor: adwaitaAccent });
   }, [themeName, colorScheme, adwaitaAccent, fluentAccent, fluentTitlebutton, fluentWindow]);
 
-  // Committed theme lags behind `theme`: after a 1s debounce, content swipes out,
-  // CSS swaps (invisible), then swipes back in. Changing theme resets the countdown.
+  // Committed theme lags behind `theme`: on change, content slides out over 400ms,
+  // the CSS swaps while hidden, waits 1s, then slides back in. Changing theme resets.
   const [committedTheme, setCommittedTheme] = useState(theme);
   const [transitionState, setTransitionState] = useState<"idle" | "exiting" | "entering">("idle");
   const isFirstThemeRender = useRef(true);

@@ -30,7 +30,7 @@ function replaceAccentWithVar(css: string, scheme: "light" | "dark"): string {
 
   // Replace rgba(R, G, B, A) derived forms → color-mix(in srgb, var(--fluent-accent) A%, transparent)
   css = css.replace(
-    new RegExp(`rgba?\\(${r},\\s*${g},\\s*${b},\\s*([\\d.]+)\\)`, "g"),
+    new RegExp(`rgba\\(${r},\\s*${g},\\s*${b},\\s*([\\d.]+)\\)`, "g"),
     (_, a: string) =>
       `color-mix(in srgb, var(--fluent-accent) ${Math.round(parseFloat(a) * 100)}%, transparent)`,
   );

@@ -185,8 +185,11 @@ export const GtkPopover = forwardRef<HTMLDivElement, GtkPopoverProps>(function G
     if (!visible || !autohide) return;
 
     const handleClickOutside = (e: MouseEvent) => {
+      if (!(e.target instanceof Node)) return;
+
+      const target = e.target;
       const el = resolvedRef.current;
-      if (el && !el.contains(e.target as Node) && !anchorRef?.current?.contains(e.target as Node)) {
+      if (el && !el.contains(target) && !anchorRef?.current?.contains(target)) {
         onClosed?.();
       }
     };
