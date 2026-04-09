@@ -155,7 +155,7 @@ function parseColor(value: string): Color | null {
 
 /**
  * Parse a CSS box-shadow string into separate shadow objects.
- * Format: [inset] <dx> <dy> <blur> [spread] <color>, ...
+ * Format: <color> <dx> <dy> <blur> [spread] [inset], ... (browser computed style order)
  * Native GTK ShadowNode has: color, dx, dy, radius (blur).
  * Native GTK InsetShadowNode has: color, dx, dy, spread, blur_radius.
  */
@@ -424,7 +424,7 @@ export function compare(native: WidgetSnapshot, web: WidgetSnapshot): CompareRes
     // (border-radius: 50% on different-sized elements produces different pixel values
     // but the same visual result). Theme-agnostic: works for any theme that uses 50%.
     if (n >= halfMinNative - 0.5 && w >= halfMinWeb - 0.5) return;
-    if (!numbersMatch(Math.min(n, halfMinNative), Math.min(w, halfMinNative))) {
+    if (!numbersMatch(Math.min(n, halfMinNative), Math.min(w, halfMinWeb))) {
       failures.push({ property, native: n, web: w });
     }
   }

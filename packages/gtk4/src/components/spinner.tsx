@@ -12,8 +12,8 @@ export interface GtkSpinnerProps extends HTMLAttributes<HTMLSpanElement> {
  *
  * CSS node: spinner
  * Uses :checked pseudo-class when spinning (mapped to [data-checked] attribute).
- * Uses :disabled pseudo-class when insensitive (mapped to [data-disabled] attribute
- * because <span> does not support the native :disabled pseudo-class).
+ * Uses :disabled pseudo-class when insensitive (remapped to :is(:disabled, [data-disabled])
+ * by the CSS transform pipeline, since <span> does not support :disabled natively).
  * Animation: 1s linear infinite rotation (defined in Adwaita CSS via spin keyframe).
  * Visual: CSS border spinner (GTK uses -gtk-icon-source: process-working-symbolic,
  * which has no direct web equivalent; we replicate with a border-based circle).
