@@ -11,12 +11,77 @@
         "typescript": "^6.0.2",
       },
     },
+    "icons/adwaita": {
+      "name": "@gtk-js/icons-adwaita",
+      "version": "0.1.0",
+      "dependencies": {
+        "@gtk-js/icon-helpers": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/react": "^19",
+      },
+      "peerDependencies": {
+        "react": "^18 || ^19",
+      },
+    },
+    "icons/fluent": {
+      "name": "@gtk-js/icons-fluent",
+      "version": "0.1.0",
+      "dependencies": {
+        "@gtk-js/icon-helpers": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/react": "^19",
+      },
+      "peerDependencies": {
+        "react": "^18 || ^19",
+      },
+    },
+    "icons/gtk4": {
+      "name": "@gtk-js/icons-gtk4",
+      "version": "0.1.0",
+      "dependencies": {
+        "@gtk-js/icon-helpers": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/react": "^19",
+      },
+      "peerDependencies": {
+        "react": "^18 || ^19",
+      },
+    },
+    "icons/mactahoe": {
+      "name": "@gtk-js/icons-mactahoe",
+      "version": "0.1.0",
+      "dependencies": {
+        "@gtk-js/icon-helpers": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/react": "^19",
+      },
+      "peerDependencies": {
+        "react": "^18 || ^19",
+      },
+    },
+    "icons/whitesur": {
+      "name": "@gtk-js/icons-whitesur",
+      "version": "0.1.0",
+      "dependencies": {
+        "@gtk-js/icon-helpers": "workspace:*",
+      },
+      "devDependencies": {
+        "@types/react": "^19",
+      },
+      "peerDependencies": {
+        "react": "^18 || ^19",
+      },
+    },
     "packages/adwaita": {
       "name": "@gtk-js/adwaita",
       "version": "0.1.0",
       "dependencies": {
-        "@gtk-js/adwaita-icons": "workspace:*",
         "@gtk-js/gtk4": "workspace:*",
+        "@gtk-js/icons-adwaita": "workspace:*",
         "@gtk-js/theme-adwaita": "workspace:*",
       },
       "devDependencies": {
@@ -27,19 +92,6 @@
       "peerDependencies": {
         "react": "^18 || ^19",
         "react-dom": "^18 || ^19",
-      },
-    },
-    "packages/adwaita-icons": {
-      "name": "@gtk-js/adwaita-icons",
-      "version": "0.1.0",
-      "dependencies": {
-        "@gtk-js/icon-helpers": "workspace:*",
-      },
-      "devDependencies": {
-        "@types/react": "^19",
-      },
-      "peerDependencies": {
-        "react": "^18 || ^19",
       },
     },
     "packages/gtk-css": {
@@ -54,8 +106,8 @@
       "name": "@gtk-js/gtk4",
       "version": "0.1.0",
       "dependencies": {
-        "@gtk-js/gtk4-icons": "workspace:*",
         "@gtk-js/icon-helpers": "workspace:*",
+        "@gtk-js/icons-gtk4": "workspace:*",
       },
       "devDependencies": {
         "@gtk-js/gtk-css": "workspace:*",
@@ -65,19 +117,6 @@
       "peerDependencies": {
         "react": "^18 || ^19",
         "react-dom": "^18 || ^19",
-      },
-    },
-    "packages/gtk4-icons": {
-      "name": "@gtk-js/gtk4-icons",
-      "version": "0.1.0",
-      "dependencies": {
-        "@gtk-js/icon-helpers": "workspace:*",
-      },
-      "devDependencies": {
-        "@types/react": "^19",
-      },
-      "peerDependencies": {
-        "react": "^18 || ^19",
       },
     },
     "packages/icon-helpers": {
@@ -94,8 +133,11 @@
       "name": "@gtk-js/website",
       "dependencies": {
         "@gtk-js/adwaita": "workspace:*",
-        "@gtk-js/adwaita-icons": "workspace:*",
         "@gtk-js/gtk4": "workspace:*",
+        "@gtk-js/icons-adwaita": "workspace:*",
+        "@gtk-js/icons-fluent": "workspace:*",
+        "@gtk-js/icons-mactahoe": "workspace:*",
+        "@gtk-js/icons-whitesur": "workspace:*",
         "@gtk-js/theme-adwaita": "workspace:*",
         "@gtk-js/theme-fluent": "workspace:*",
         "@gtk-js/theme-mactahoe": "workspace:*",
@@ -294,15 +336,21 @@
 
     "@gtk-js/adwaita": ["@gtk-js/adwaita@workspace:packages/adwaita"],
 
-    "@gtk-js/adwaita-icons": ["@gtk-js/adwaita-icons@workspace:packages/adwaita-icons"],
-
     "@gtk-js/gtk-css": ["@gtk-js/gtk-css@workspace:packages/gtk-css"],
 
     "@gtk-js/gtk4": ["@gtk-js/gtk4@workspace:packages/gtk4"],
 
-    "@gtk-js/gtk4-icons": ["@gtk-js/gtk4-icons@workspace:packages/gtk4-icons"],
-
     "@gtk-js/icon-helpers": ["@gtk-js/icon-helpers@workspace:packages/icon-helpers"],
+
+    "@gtk-js/icons-adwaita": ["@gtk-js/icons-adwaita@workspace:icons/adwaita"],
+
+    "@gtk-js/icons-fluent": ["@gtk-js/icons-fluent@workspace:icons/fluent"],
+
+    "@gtk-js/icons-gtk4": ["@gtk-js/icons-gtk4@workspace:icons/gtk4"],
+
+    "@gtk-js/icons-mactahoe": ["@gtk-js/icons-mactahoe@workspace:icons/mactahoe"],
+
+    "@gtk-js/icons-whitesur": ["@gtk-js/icons-whitesur@workspace:icons/whitesur"],
 
     "@gtk-js/tests": ["@gtk-js/tests@workspace:tests"],
 

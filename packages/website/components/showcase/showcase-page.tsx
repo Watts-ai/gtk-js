@@ -1,8 +1,11 @@
 "use client";
 
-import * as adwaitaIcons from "@gtk-js/adwaita-icons";
-import { ApplicationsSystem } from "@gtk-js/adwaita-icons";
-import { GtkBox, GtkButton, GtkLabel, GtkPopover, GtkProvider } from "@gtk-js/gtk4";
+import { GtkBox, GtkButton, GtkLabel, GtkPopover, GtkProvider, type IconMap } from "@gtk-js/gtk4";
+import * as adwaitaIcons from "@gtk-js/icons-adwaita";
+import { ApplicationsSystem } from "@gtk-js/icons-adwaita";
+import * as fluentIcons from "@gtk-js/icons-fluent";
+import * as mactahoeIcons from "@gtk-js/icons-mactahoe";
+import * as whitesurIcons from "@gtk-js/icons-whitesur";
 import { AdwaitaTheme } from "@gtk-js/theme-adwaita";
 import { FluentTheme } from "@gtk-js/theme-fluent";
 import { MacTahoeTheme } from "@gtk-js/theme-mactahoe";
@@ -77,6 +80,13 @@ function useSteppedTyping() {
 }
 
 type ThemeName = "adwaita" | "whitesur" | "mactahoe" | "fluent";
+
+const THEME_ICONS = {
+  adwaita: adwaitaIcons,
+  whitesur: whitesurIcons,
+  mactahoe: mactahoeIcons,
+  fluent: fluentIcons,
+} satisfies Record<ThemeName, IconMap>;
 
 const THEME_LABELS: Record<ThemeName, string> = {
   adwaita: "Adwaita",
@@ -278,7 +288,7 @@ export function ShowcasePage() {
   return (
     <GtkProvider
       theme={committedTheme}
-      icons={adwaitaIcons}
+      icons={THEME_ICONS[themeName]}
       style={{ minHeight: "100vh", transition: "background-color 700ms ease" }}
     >
       <div
@@ -505,7 +515,7 @@ export function ShowcasePage() {
               createPortal(
                 <GtkProvider
                   theme={committedTheme}
-                  icons={adwaitaIcons}
+                  icons={THEME_ICONS[themeName]}
                   style={{ position: "fixed", inset: 0, zIndex: 9999 }}
                 >
                   <div
