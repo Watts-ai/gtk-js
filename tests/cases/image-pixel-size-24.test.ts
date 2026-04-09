@@ -1,5 +1,5 @@
-import { compare, gtkTest } from "../harness";
 import { expect } from "bun:test";
+import { compare, gtkTest } from "../harness";
 
 gtkTest("image-pixel-size-24", (native, web) => {
   // GTK4 WidgetPaintable includes parent window render nodes clipped to the widget's
