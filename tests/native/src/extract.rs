@@ -22,6 +22,12 @@ pub struct WidgetSnapshot {
     pub shadows: Vec<ShadowInfo>,
     pub inset_shadows: Vec<InsetShadowInfo>,
     pub opacity: f32,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub css_name: Option<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub css_classes: Vec<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub children: Vec<WidgetSnapshot>,
 }
 
 #[derive(Debug, Serialize, Default)]
@@ -61,7 +67,8 @@ pub struct ShadowInfo {
     pub color: Color,
     pub dx: f32,
     pub dy: f32,
-    pub radius: f32,
+    pub spread: f32,
+    pub blur_radius: f32,
 }
 
 #[derive(Debug, Serialize)]
@@ -120,6 +127,80 @@ pub fn extract_with_widget<W: IsA<gtk::Widget>>(
     snapshot
 }
 
+/// Recursively extract a full widget tree — each widget gets its own snapshot
+/// with its CSS identity (node name + classes) and child widgets.
+#[allow(deprecated)]
+pub fn extract_widget_tree<W: IsA<gtk::Widget>>(widget: &W) -> WidgetSnapshot {
+    let w = widget.as_ref();
+
+    let width = w.width();
+    let height = w.height();
+
+    // Snapshot this specific widget to get render-node-derived properties
+    let paintable = gtk::WidgetPaintable::new(Some(w));
+    let snap_obj = gtk::Snapshot::new();
+    paintable.snapshot(&snap_obj, width as f64, height as f64);
+
+    let mut snapshot = if let Some(node) = snap_obj.to_node() {
+        extract_with_widget(&node, w)
+    } else {
+        let mut s = WidgetSnapshot {
+            width: width as f32,
+            height: height as f32,
+            padding: Sides::default(),
+            border_radius: Corners::default(),
+            background_color: None,
+            border_widths: Sides::default(),
+            border_colors: SideColors::default(),
+            color: None,
+            font_family: None,
+            font_weight: None,
+            shadows: Vec::new(),
+            inset_shadows: Vec::new(),
+            opacity: 1.0,
+            css_name: None,
+            css_classes: Vec::new(),
+            children: Vec::new(),
+        };
+        // Still extract widget API properties even without render nodes
+        let color = w.color();
+        s.color = Some(rgba_to_color(&color));
+        let ctx = w.style_context();
+        let padding = ctx.padding();
+        s.padding = Sides {
+            top: padding.top() as f32,
+            right: padding.right() as f32,
+            bottom: padding.bottom() as f32,
+            left: padding.left() as f32,
+        };
+        let border = ctx.border();
+        s.border_widths = Sides {
+            top: border.top() as f32,
+            right: border.right() as f32,
+            bottom: border.bottom() as f32,
+            left: border.left() as f32,
+        };
+        s
+    };
+
+    // CSS identity
+    snapshot.css_name = Some(w.css_name().to_string());
+    snapshot.css_classes = w.css_classes().iter().map(|s| s.to_string()).collect();
+
+    // Recurse into visible children
+    let mut children = Vec::new();
+    let mut child = w.first_child();
+    while let Some(c) = child {
+        if c.is_visible() {
+            children.push(extract_widget_tree(&c));
+        }
+        child = c.next_sibling();
+    }
+    snapshot.children = children;
+
+    snapshot
+}
+
 pub fn extract_snapshot(node: &gsk::RenderNode) -> WidgetSnapshot {
     let bounds = node.bounds();
     let mut snapshot = WidgetSnapshot {
@@ -136,6 +217,9 @@ pub fn extract_snapshot(node: &gsk::RenderNode) -> WidgetSnapshot {
         shadows: Vec::new(),
         inset_shadows: Vec::new(),
         opacity: 1.0,
+        css_name: None,
+        css_classes: Vec::new(),
+        children: Vec::new(),
     };
 
     walk_node(node, &mut snapshot);
@@ -156,6 +240,16 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
             if snapshot.background_color.is_none() {
                 // Only treat as background if the node covers a significant area.
                 // Thin slivers (e.g. text underline decorations) should be ignored.
+                //
+                // Known limitation: WidgetPaintable renders the widget from the window's
+                // full render tree, clipped to widget bounds. A parent window background
+                // (ColorNode covering the whole window) therefore shows up here with the
+                // same bounds as the widget itself and is indistinguishable from the
+                // widget's own CSS background. GTK4 removed the style-context property
+                // inspection APIs that would let us verify the widget's own CSS background
+                // independently. Widgets that have no CSS background but sit on a solid
+                // window background will report the window color here. Tests for such
+                // widgets (e.g. GtkImage with an icon) must filter background_color.
                 let bounds = color_node.bounds();
                 let area = bounds.width() * bounds.height();
                 let min_bg_area = snapshot.width * snapshot.height * 0.1;
@@ -242,7 +336,8 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
                     color: rgba_to_color(shadow.color()),
                     dx: shadow.dx(),
                     dy: shadow.dy(),
-                    radius: shadow.radius(),
+                    spread: 0.0,
+                    blur_radius: shadow.radius(),
                 });
             }
             walk_node(&shadow_node.child(), snapshot);
@@ -280,6 +375,17 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
             walk_node(&debug_node.child(), snapshot);
         }
 
+        RenderNodeType::OutsetShadowNode => {
+            let outset_node: gsk::OutsetShadowNode = node.clone().downcast().unwrap();
+            snapshot.shadows.push(ShadowInfo {
+                color: rgba_to_color(&outset_node.color()),
+                dx: outset_node.dx(),
+                dy: outset_node.dy(),
+                spread: outset_node.spread(),
+                blur_radius: outset_node.blur_radius(),
+            });
+        }
+
         // Visual-only nodes that don't carry CSS-equivalent properties.
         // Icons (FillNode, StrokeNode, CairoNode, TextureNode), gradients,
         // and compositing nodes are rendering details — we compare icon
@@ -297,7 +403,6 @@ fn walk_node(node: &gsk::RenderNode, snapshot: &mut WidgetSnapshot) {
         | RenderNodeType::BlurNode
         | RenderNodeType::BlendNode
         | RenderNodeType::CrossFadeNode
-        | RenderNodeType::OutsetShadowNode
         | RenderNodeType::RepeatNode
         | RenderNodeType::GlShaderNode => {}
 

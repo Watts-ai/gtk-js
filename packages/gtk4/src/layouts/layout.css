@@ -156,6 +156,32 @@
   margin-right: -8px;
 }
 
+/* === GtkSwitch === */
+/*
+ * GtkSwitch uses a custom layout manager (gtkswitch.c: gtk_switch_measure /
+ * gtk_switch_allocate). Width = 2 × slider min-width = 40px content; height =
+ * slider min-height = 20px content. Slider occupies one half, positioned left
+ * (off) or right (on) via handle_pos (0=off, 1=on).
+ */
+.gtk-switch {
+  position: relative;
+  min-width: 40px; /* content-box: 2 × 20px slider min-width */
+  min-height: 20px; /* content-box: 20px slider min-height */
+}
+
+.gtk-switch > .gtk-slider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 50%;
+}
+
+.gtk-switch[data-checked] > .gtk-slider {
+  left: 50%;
+  right: 0;
+}
+
 /* === Popover Arrow ===
  * GTK draws the popover arrow as a 24x12 triangle via Cairo (gtkpopover.c).
  * TAIL_GAP_WIDTH=24, TAIL_HEIGHT=12. We replicate with clip-path.

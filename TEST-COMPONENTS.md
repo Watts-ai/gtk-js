@@ -27,20 +27,69 @@ Structural regression tests comparing native GTK4/Adwaita rendering against web 
   - [x] flat
   - [x] circular
   - [x] disabled
-- [ ] GtkCheckButton
-- [ ] GtkSwitch
-- [ ] GtkLabel
-- [ ] GtkImage
+- [x] GtkCheckButton
+  - [x] default
+  - [x] checked
+  - [x] indeterminate
+  - [x] disabled
+  - [x] checked-disabled
+  - [x] no-label
+  - [x] radio-default (group mode)
+  - [x] radio-checked (group mode)
+- [x] GtkSwitch
+  - [x] off-default
+  - [x] on-default
+  - [x] off-disabled
+  - [x] on-disabled
+- [x] GtkLabel
+  - [x] default
+  - [x] wrap-word
+  - [x] wrap-char
+  - [x] ellipsize
+  - [x] justify-center
+  - [x] width-chars
+  - [x] xalign
+  - [x] disabled
+- [x] GtkImage
+  - [x] default
+  - [x] normal-icons
+  - [x] large-icons
+  - [x] pixel-size-24
+  - [x] no-icon-name
 - [ ] GtkEntry
 - [ ] GtkPasswordEntry
 - [ ] GtkSearchEntry
-- [ ] GtkEditableLabel
+- [x] GtkEditableLabel
+  - [x] display-default
+  - [x] display-empty
+  - [x] editing-active
+  - [x] disabled
 - [ ] GtkTextView
 - [ ] GtkSpinButton
 - [ ] GtkScale
-- [ ] GtkProgressBar
-- [ ] GtkLevelBar
-- [ ] GtkSpinner
+- [x] GtkProgressBar
+  - [x] horizontal-50
+  - [x] horizontal-0
+  - [x] horizontal-100
+  - [x] vertical-50
+  - [x] inverted-50
+  - [x] text-custom
+  - [x] osd-horizontal
+  - [x] fraction-small
+- [x] GtkLevelBar
+  - [x] continuous-default
+  - [x] continuous-low
+  - [x] continuous-full
+  - [x] continuous-vertical
+  - [x] discrete-default
+  - [x] discrete-inverted
+  - [x] disabled
+- [x] GtkSpinner
+  - [x] default
+  - [x] spinning
+  - [x] spinning-custom-size
+  - [x] disabled-not-spinning
+  - [x] disabled-spinning
 - [ ] GtkCalendar
 - [ ] GtkBox
 - [ ] GtkCenterBox
@@ -52,7 +101,10 @@ Structural regression tests comparing native GTK4/Adwaita rendering against web 
 - [ ] GtkOverlay
 - [ ] GtkFrame
 - [ ] GtkExpander
-- [ ] GtkSeparator
+- [x] GtkSeparator
+  - [x] horizontal-default
+  - [x] vertical
+  - [x] spacer-horizontal
 - [ ] GtkScrolledWindow
 - [ ] GtkScrollBar
 - [ ] GtkHeaderBar
@@ -61,7 +113,12 @@ Structural regression tests comparing native GTK4/Adwaita rendering against web 
 - [ ] GtkPopover
 - [ ] GtkDropDown
 - [ ] GtkListBox
-- [ ] GtkWindowTitle
+- [x] GtkWindowTitle
+  - [x] text-default
+  - [x] with-subtitle
+  - [x] long-text
+  - [x] no-subtitle
+  - [x] both-empty
 - [ ] GtkWindow
 
 ## Adwaita Components
