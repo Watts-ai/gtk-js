@@ -401,7 +401,10 @@ fn create_widget_for_case(name: &str) -> Option<(gtk::Widget, bool)> {
             widget_case!(cases::password_entry_disabled::PasswordEntryDisabled, false)
         }
         "password-entry-peek-icon" => {
-            widget_case!(cases::password_entry_peek_icon::PasswordEntryPeekIcon, false)
+            widget_case!(
+                cases::password_entry_peek_icon::PasswordEntryPeekIcon,
+                false
+            )
         }
         "progressbar-horizontal-50" => {
             widget_case!(
